@@ -14,11 +14,11 @@
         (ubi-dron dron1 deposito)
         (ubi-caja caja1 deposito)
 
-        (dron-parado dron1)
+        ;(dron-modo-carga-descarga dron1)
         (caja-en-deposito caja1)
         (ubi-humano-herido humano1 campo)
 
-        (tipo-contenido caja1 comida)
+        (contenido-caja comida caja1)
  
         (free-gripper gripper1)
         ;(free-gripper gripper2)
@@ -28,10 +28,8 @@
     (:goal
         (and
             (humano-ha-recibido-contenido humano1 comida campo)
-
+            (dron-en-deposito dron1)
         )
     )
 
-    ;un-comment the following line if metric is needed
-    ;(:metric minimize (???))
 )
