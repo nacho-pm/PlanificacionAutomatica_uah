@@ -15,15 +15,14 @@
         (dron-volando ?d - dron)
         (dron-parado ?d - dron)
 
-        (free-drch)
-        (free-izq)
+        (free-gripper ?g - gripper)
         
-
         (ubi-caja ?c - caja ?u - ubi)
-        (caja-en-dron ?c - caja ?d - dron)
-        (caja-en-humano ?c - caja ?h - humano)
+        (caja-en-gripper ?c - caja ?g - gripper)
+        
         (caja-en-deposito ?c - caja)
         (tipo-contenido ?c - caja ?con - contenido)
+
     )
 
     (:action volar
@@ -32,34 +31,21 @@
         :effect (and (dron-volando ?d) (not(dron-parado ?d)) (not(ubi-dron ?d ?u1)) (ubi-dron ?d ?u2))
     )
 
-    (:action coger_caja_drch
-        :parameters (?c - caja ?u - ubi ?d - dron)
-        :precondition (and (ubi-dron ?d ?u) (ubi-caja ?c ?u) (caja-en-deposito ?c) (free-drch) (dron-parado ?d))
-        :effect (and (not(free-drch)) (caja-en-dron ?c ?d) (not(caja-en-deposito ?c)))
-    )
-    
-    (:action coger_caja_izq
-        :parameters (?c - caja ?u - ubi ?d - dron)
-        :precondition (and (ubi-dron ?d ?u) (ubi-caja ?c ?u) (caja-en-deposito ?c) (free-izq) (dron-parado ?d))
-        :effect (and (not(free-izq)) (caja-en-dron ?c ?d) (not(caja-en-deposito ?c)))
+    (:action coger_caja
+        :parameters (?c - caja ?u - ubi ?d - dron ?con - contenido ?g - gripper)
+        :precondition (and (ubi-dron ?d ?u) (ubi-caja ?c ?u) (tipo-contenido ?c ?con) (caja-en-deposito ?c) (free-gripper ?g) (dron-parado ?d))
+        :effect (and (not(free-gripper ?g)) (caja-en-gripper ?c ?g) (not(caja-en-deposito ?c)))
     )
 
-    (:action entregar_caja_drch
-        :parameters (?c - caja ?u - ubi ?d - dron ?con - contenido ?h - humano)
+    (:action entregar_caja
+        :parameters (?c - caja ?u - ubi ?d - dron ?g - gripper ?con - contenido ?h - humano)
         
-        :precondition (and (ubi-dron ?d ?u) (ubi-caja ?c ?u) (ubi-humano-herido ?h ?u) 
-                        (humano-necesita ?h ?con) (tipo-contenido ?c ?con) (caja-en-dron ?c ?d) (dron-parado ?d))
+        :precondition (and (ubi-dron ?d ?u) (caja-en-gripper ?c ?g) (ubi-humano-herido ?h ?u) 
+                        (humano-necesita ?h ?con) (tipo-contenido ?c ?con) (dron-parado ?d))
         
-        :effect (and (free-drch) (humano-ha-recibido-contenido ?h ?con ?u) (caja-en-humano ?c ?h))
+        :effect (and (free-gripper ?g) (humano-ha-recibido-contenido ?h ?con ?u))
     )
 
-    (:action entregar_caja_izq
-        :parameters (?c - caja ?u - ubi ?d - dron ?con - contenido ?h - humano)
-        
-        :precondition (and (ubi-dron ?d ?u) (ubi-caja ?c ?u) (ubi-humano-herido ?h ?u) 
-                        (humano-necesita ?h ?con) (tipo-contenido ?c ?con) (caja-en-dron ?c ?d) (dron-parado ?d))
-        
-        :effect (and (free-izq) (humano-ha-recibido-contenido ?h ?con ?u) (caja-en-humano ?c ?h))
-    )
+   
 
 )

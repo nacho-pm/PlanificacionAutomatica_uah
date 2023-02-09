@@ -2,7 +2,7 @@
     (:domain pl1_domain)
     (:objects
         humano1 - humano
-        gdrch1 gizq1 - gripper
+        gripper1 gripper2 - gripper
         dron1 - dron
         caja1 - caja
         comida - contenido
@@ -12,22 +12,22 @@
 
     (:init
         (ubi-dron dron1 deposito)
-        (ubi-humano-herido humano1 campo)
         (ubi-caja caja1 deposito)
 
-        (tipo-contenido caja1 comida)
+        (dron-parado dron1)
+        (caja-en-deposito caja1)
+        (ubi-humano-herido humano1 campo)
 
-        (gripper-drch gdrch1 dron1)
-        (gripper-izq gizq1 dron1) 
-        (free-drch)
-        (free-drch)
+        (tipo-contenido caja1 comida)
+ 
+        (free-gripper gripper1)
+        ;(free-gripper gripper2)
 
     )
 
     (:goal
         (and
             (humano-ha-recibido-contenido humano1 comida campo)
-            (caja-en-humano caja1 humano1)
 
         )
     )
