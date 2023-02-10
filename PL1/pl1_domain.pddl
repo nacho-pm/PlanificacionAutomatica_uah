@@ -1,8 +1,8 @@
 (define (domain pl1_domain)
 
-    (:requirements :strips :typing)
+    (:requirements :strips :typing :negative-preconditions)
     (:types
-        dron gripper humano caja ubi contenido - object
+        dron humano caja ubi contenido - object
     )
 
     (:predicates
@@ -14,63 +14,80 @@
         (dron-volando ?d - dron)
         (dron-modo-carga-descarga ?d - dron)   
         (dron-en-deposito ?d - dron)
-
-        (free-gripper-drch ?g - gripper ?d - dron)
-        (free-gripper-izq ?g - gripper ?d - dron)
+        (dron-cargadob1 ?d - dron)
+        (dron-cargadob2 ?d - dron)
         
-        (caja-en-gripper-drch ?c - caja ?g - gripper)
-        (caja-en-gripper-izq ?c - caja ?g - gripper)
-        (cajas-en-robot)
+        (free-brazo1 ?d - dron)
+        (free-brazo2 ?d - dron)
+
+        (brazo1-lleno ?d - dron ?c - caja ?con - contenido)
+        (brazo2-lleno ?d - dron ?c - caja ?con - contenido)
+        
         (ubi-caja ?c - caja ?u - ubi)
         (contenido-caja ?con - contenido ?c - caja)
 
     )
 
-    (:action coger_caja_drch
-        :parameters (?u - ubi ?d - dron ?g - gripper ?c - caja ?con - contenido)
+    (:action coger_con_brazo1
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido)
         :precondition (and 
+            (dron-en-deposito ?d) 
             (ubi-dron ?d ?u) 
             (ubi-caja ?c ?u)   
-            (dron-en-deposito ?d)  
-            (contenido-caja ?con ?c)        
-            (free-gripper-drch ?g ?d) 
-            
+            (contenido-caja ?con ?c)  
+            (free-brazo1 ?d)
             )
         :effect (and 
-            (not(free-gripper-drch ?g ?d)) 
+            (brazo1-lleno ?d ?c ?con)
+            (not(ubi-caja ?c ?u))
+            (not(free-brazo1 ?d))
             (dron-modo-carga-descarga ?d)
-            (caja-en-gripper-drch ?c ?g)
-            ) 
-            
-            
+            (dron-cargadob1 ?d)
+            )         
     )
 
-    (:action coger_caja_izq
-        :parameters (?u - ubi ?d - dron ?g - gripper ?c - caja ?con - contenido)
+    (:action coger_con_brazo2
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido)
         :precondition (and 
+            (dron-en-deposito ?d) 
             (ubi-dron ?d ?u) 
-            (ubi-caja ?c ?u) 
-            (dron-en-deposito ?d)
+            (ubi-caja ?c ?u)   
             (contenido-caja ?con ?c) 
-            (free-gripper-izq ?g ?d) 
-            
+            (free-brazo2 ?d) 
             )
         :effect (and 
-            (not(free-gripper-izq ?g ?d)) 
+            (brazo2-lleno ?d ?c ?con)
+            (not(ubi-caja ?c ?u))
+            (not(free-brazo2 ?d))
             (dron-modo-carga-descarga ?d)
-            (caja-en-gripper-izq ?c ?g) 
-            
-            )
+            (dron-cargadob2 ?d)
+            )         
     )
 
-
-    (:action salir_del_deposito
-        :parameters (?d - dron ?u1 - ubi ?u2 - ubi ?c - caja ?gd - gripper)
+    (:action salir_del_deposito_cargado_entero
+        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
         :precondition (and 
             (ubi-dron ?d ?u1)
             (dron-en-deposito ?d)
-            (caja-en-gripper-drch ?c ?gd) 
-            ;(caja-en-gripper-izq ?c ?gi)
+            (dron-modo-carga-descarga ?d)
+            (dron-cargadob1 ?d)
+            (dron-cargadob2 ?d)
+        )
+        
+        :effect (and 
+            (dron-volando ?d) 
+            (not(dron-en-deposito ?d)) 
+            (not(ubi-dron ?d ?u1))
+            (ubi-dron ?d ?u2)
+        ) 
+    )
+    (:action salir_del_deposito_cargado_mitad
+        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :precondition (and 
+            (ubi-dron ?d ?u1)
+            (dron-en-deposito ?d)
+            (dron-modo-carga-descarga ?d)
+            (dron-cargadob1 ?d)
         )
         
         :effect (and 
@@ -81,67 +98,50 @@
         ) 
     )
 
-    (:action salir_del_deposito_lleno
-        :parameters (?d - dron ?u1 - ubi ?u2 - ubi ?c - caja ?gd - gripper ?gi - gripper)
-        :precondition (and 
-            (ubi-dron ?d ?u1)
-            (dron-en-deposito ?d)
-            (caja-en-gripper-drch ?c ?gd) 
-            (caja-en-gripper-izq ?c ?gi)
-        )
-        
-        :effect (and 
-            (dron-volando ?d) 
-            (not(dron-en-deposito ?d)) 
-            (not(ubi-dron ?d ?u1))
-            (ubi-dron ?d ?u2)
-        ) 
-    )
-
-
-
-    (:action entregar_caja_drch
-        :parameters (?u - ubi ?d - dron ?g - gripper ?c - caja ?con - contenido ?h - humano)
+    (:action entregar_con_brazo1
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido ?h - humano)
         :precondition (and
             (ubi-dron ?d ?u) 
-            (caja-en-gripper-drch ?c ?g)
             (ubi-humano-herido ?h ?u)
             (contenido-caja ?con ?c)
             (dron-volando ?d)
+            (brazo1-lleno ?d ?c ?con)
             )
         :effect (and
-            (free-gripper-drch ?g ?d)
+            (not(brazo1-lleno ?d ?c ?con))
+            (free-brazo1 ?d)
             (dron-modo-carga-descarga ?d)
             (humano-ha-recibido-contenido ?h ?con)
-            (not(caja-en-gripper-drch ?c ?g))
             (not(dron-volando ?d))
             )
     )
 
-    (:action entregar_caja_izq
-        :parameters (?u - ubi ?d - dron ?g - gripper ?c - caja ?con - contenido ?h - humano)
+    (:action entregar_con_brazo2
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido ?h - humano)
         :precondition (and
             (ubi-dron ?d ?u) 
-            (caja-en-gripper-izq ?c ?g)
             (ubi-humano-herido ?h ?u)
             (contenido-caja ?con ?c)
             (dron-volando ?d)
+            (brazo2-lleno ?d ?c ?con)
             )
         :effect (and
-            (free-gripper-izq ?g ?d)
+            (not(brazo2-lleno ?d ?c ?con))
+            (free-brazo2 ?d)
             (dron-modo-carga-descarga ?d)
             (humano-ha-recibido-contenido ?h ?con)
-            (not(caja-en-gripper-izq ?c ?g))
             (not(dron-volando ?d))
             )
     )
+
+    
 
     (:action regresar_al_deposito
-        :parameters (?d - dron ?gd - gripper ?gi - gripper)
+        :parameters (?d - dron)
         :precondition (and 
-            (free-gripper-drch ?gd ?d)
-            (free-gripper-izq ?gi ?d)
-            ;(dron-modo-carga-descarga ?d)
+            (free-brazo1 ?d)
+            (free-brazo2 ?d)
+            (dron-modo-carga-descarga ?d)
             )
         :effect (and 
             (dron-en-deposito ?d)
