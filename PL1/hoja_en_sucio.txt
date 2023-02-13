@@ -1,0 +1,85 @@
+    (:action salir_del_deposito_cargado_entero
+        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :precondition (and
+            (ubi-dron ?d ?u1)
+            (dron-en-deposito ?d)
+            ;(dron-modo-carga-descarga ?d)
+            ;(dron-cargadob1 ?d)
+            ;(dron-cargadob2 ?d)
+        )
+
+        :effect (and
+            (dron-volando ?d)
+            (not(dron-en-deposito ?d))
+            (not(ubi-dron ?d ?u1))
+            ;(not(dron-modo-carga-descarga ?d))
+            (ubi-dron ?d ?u2)
+        )
+    )
+    (:action salir_del_deposito_cargado_mitad
+        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :precondition (and
+            (ubi-dron ?d ?u1)
+            (dron-en-deposito ?d)
+            ;(dron-modo-carga-descarga ?d)
+            ;(dron-cargadob1 ?d)
+        )
+
+        :effect (and
+            (dron-volando ?d)
+            (not(dron-en-deposito ?d))
+            (not(ubi-dron ?d ?u1))
+            (ubi-dron ?d ?u2)
+        )
+    )
+
+        (:action coger_con_brazo1
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido)
+        :precondition (and
+            (dron-en-deposito ?d)
+            (ubi-dron ?d ?u)
+            (ubi-caja ?c ?u)
+            (contenido-caja ?con ?c)
+            (free-brazo1 ?d)
+        )
+        :effect (and
+            (brazo1-lleno ?d ?c ?con)
+            (not(ubi-caja ?c ?u))
+            (not(free-brazo1 ?d))
+            ;(dron-modo-carga-descarga ?d)
+            ;(dron-cargadob1 ?d)
+        )
+    )
+
+    (:action coger_con_brazo2
+        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido)
+        :precondition (and
+            (dron-en-deposito ?d)
+            (ubi-dron ?d ?u)
+            (ubi-caja ?c ?u)
+            (contenido-caja ?con ?c)
+            (free-brazo2 ?d)
+        )
+        :effect (and
+            (brazo2-lleno ?d ?c ?con)
+            (not(ubi-caja ?c ?u))
+            (not(free-brazo2 ?d))
+            ;(dron-modo-carga-descarga ?d)
+            ;(dron-cargadob2 ?d)
+        )
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
