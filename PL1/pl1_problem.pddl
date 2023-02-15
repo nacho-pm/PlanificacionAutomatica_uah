@@ -11,23 +11,21 @@
 
     (:init
         (ubicacion-dron dron1 deposito)
+
         (ubicacion-caja caja1 deposito)
 
-
-        (at-deposito dron1)
         (ubicacion-humano-herido humano1 campo)
 
         (contenido-caja comida caja1)
-
-        (free-b1 dron1)
-        (free-b2 dron1)
 
     )
 
     (:goal
         (and
-            (humano-ha-recibido-contenido humano1 comida)
-            (at-deposito dron1)
+            (humano-necesita humano1 comida)
+            (ubicacion-dron dron1 deposito)
         )
     )
+
+    ;(:metric minimize (total-cost))
 )
