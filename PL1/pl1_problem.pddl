@@ -3,30 +3,31 @@
     (:objects
         humano1 - humano
         dron1 - dron
-        caja1 - caja
+        caja1 caja2 - caja
         comida - contenido
-        deposito campo - ubi
+        deposito campo - ubicacion
 
     )
 
     (:init
-        (ubi-dron dron1 deposito)
-        (ubi-caja caja1 deposito)
+        (ubicacion-dron dron1 deposito)
+        (ubicacion-caja caja1 deposito)
 
-        (dron-en-deposito dron1)
-        (ubi-humano-herido humano1 campo)
+
+        (at-deposito dron1)
+        (ubicacion-humano-herido humano1 campo)
 
         (contenido-caja comida caja1)
 
-        (free-brazo1 dron1)
-        (free-brazo2 dron1)
+        (free-b1 dron1)
+        (free-b2 dron1)
 
     )
 
     (:goal
         (and
             (humano-ha-recibido-contenido humano1 comida)
-            (dron-en-deposito dron1)
+            (at-deposito dron1)
         )
     )
 )
