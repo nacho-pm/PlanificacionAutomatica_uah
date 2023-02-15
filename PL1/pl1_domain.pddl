@@ -2,29 +2,29 @@
 
     (:requirements :strips :typing)
     (:types
-        dron humano caja ubi contenido - object
+        dron humano caja ubicacion contenido - object
     )
 
     (:predicates
-        (ubi-humano-herido ?h - humano ?u - ubi)
+        (ubicacion-humano-herido ?h - humano ?u - ubicacion)
         (humano-ha-recibido-contenido ?h - humano ?con - contenido)
 
-        (ubi-dron ?d - dron ?u - ubi)
+        (ubicacion-dron ?d - dron ?u - ubicacion)
 
-        (dron-volando ?d - dron)
-        (dron-modo-descarga ?d - dron)
-        (dron-en-deposito ?d - dron)
+        (volando ?d - dron)
+        (descargando ?d - dron)
+        (at-deposito ?d - dron)
 
         (dron-lleno ?d - dron)
         (dron-medio-lleno ?d - dron)
 
-        (free-brazo1 ?d - dron)
-        (free-brazo2 ?d - dron)
+        (free-b1 ?d - dron)
+        (free-b2 ?d - dron)
 
-        (brazo1-lleno ?d - dron ?c - caja ?con - contenido)
-        (brazo2-lleno ?d - dron ?c - caja ?con - contenido)
+        (b1-lleno ?d - dron ?c - caja ?con - contenido)
+        (b2-lleno ?d - dron ?c - caja ?con - contenido)
 
-        (ubi-caja ?c - caja ?u - ubi)
+        (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
 
     )
@@ -32,137 +32,136 @@
     ;-----------------------acciones------------------------------
 
     (:action volar_a_otra_ubicacion
-        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :parameters (?d - dron ?u1 - ubicacion ?u2 - ubicacion)
         :precondition (and
-            (ubi-dron ?d ?u1)
-            (dron-modo-descarga ?d)
+            (ubicacion-dron ?d ?u1)
+            (descargando ?d)
         )
         :effect (and
-            (not(ubi-dron ?d ?u1))
-            (not(dron-modo-descarga ?d))
-            (ubi-dron ?d ?u2)
-            (dron-volando ?d)
+            (not(ubicacion-dron ?d ?u1))
+            (not(descargando ?d))
+            (ubicacion-dron ?d ?u2)
+            (volando ?d)
         )
     )
 
     (:action entregar_con_brazo1
-        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido ?h - humano)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?h - humano)
         :precondition (and
-            (ubi-dron ?d ?u)
-            (ubi-humano-herido ?h ?u)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-humano-herido ?h ?u)
             (contenido-caja ?con ?c)
-            (dron-volando ?d)
-            (brazo1-lleno ?d ?c ?con)
+            (volando ?d)
+            (b1-lleno ?d ?c ?con)
         )
         :effect (and
-            (not(brazo1-lleno ?d ?c ?con))
-            (not(dron-volando ?d))
-            (free-brazo1 ?d)
-            (dron-modo-descarga ?d)
+            (not(b1-lleno ?d ?c ?con))
+            (not(volando ?d))
+            (free-b1 ?d)
+            (descargando ?d)
             (humano-ha-recibido-contenido ?h ?con)
 
         )
     )
 
     (:action entregar_con_brazo2
-        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido ?h - humano)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?h - humano)
         :precondition (and
-            (ubi-dron ?d ?u)
-            (ubi-humano-herido ?h ?u)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-humano-herido ?h ?u)
             (contenido-caja ?con ?c)
-            (dron-volando ?d)
-            (brazo2-lleno ?d ?c ?con)
+            (volando ?d)
+            (b2-lleno ?d ?c ?con)
         )
         :effect (and
-            (not(brazo2-lleno ?d ?c ?con))
-            (not(dron-volando ?d))
-            (free-brazo2 ?d)
-            (dron-modo-descarga ?d)
+            (not(b2-lleno ?d ?c ?con))
+            (not(volando ?d))
+            (free-b2 ?d)
+            (descargando ?d)
             (humano-ha-recibido-contenido ?h ?con)
-
         )
     )
 
     (:action coger_cajas
-        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido ?c2 - caja ?con2 - contenido)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?c2 - caja ?con2 - contenido)
         :precondition (and
-            (dron-en-deposito ?d)
-            (ubi-dron ?d ?u)
-            (ubi-caja ?c ?u)
+            (at-deposito ?d)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-caja ?c ?u)
             (contenido-caja ?con ?c)
-            (ubi-caja ?c2 ?u)
+            (ubicacion-caja ?c2 ?u)
             (contenido-caja ?con2 ?c2)
-            (free-brazo1 ?d)
-            (free-brazo2 ?d)
+            (free-b1 ?d)
+            (free-b2 ?d)
         )
         :effect (and
-            (not(ubi-caja ?c ?u))
-            (not(ubi-caja ?c2 ?u))
-            (not(free-brazo1 ?d))
-            (not(free-brazo2 ?d))
-            (brazo1-lleno ?d ?c ?con)
-            (brazo2-lleno ?d ?c2 ?con2)
+            (not(ubicacion-caja ?c ?u))
+            (not(ubicacion-caja ?c2 ?u))
+            (not(free-b1 ?d))
+            (not(free-b2 ?d))
+            (b1-lleno ?d ?c ?con)
+            (b2-lleno ?d ?c2 ?con2)
             (dron-lleno ?d)
         )
     )
 
     (:action coger_caja
-        :parameters (?u - ubi ?d - dron ?c - caja ?con - contenido)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
-            (dron-en-deposito ?d)
-            (ubi-dron ?d ?u)
-            (ubi-caja ?c ?u)
+            (at-deposito ?d)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-caja ?c ?u)
             (contenido-caja ?con ?c)
-            (free-brazo1 ?d)
+            (free-b1 ?d)
         )
         :effect (and
-            (not(ubi-caja ?c ?u))
-            (not(free-brazo1 ?d))
-            (brazo1-lleno ?d ?c ?con)
+            (not(ubicacion-caja ?c ?u))
+            (not(free-b1 ?d))
+            (b1-lleno ?d ?c ?con)
             (dron-medio-lleno ?d)
         )
     )
 
     (:action salir_del_deposito_medio_lleno
-        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :parameters (?d - dron ?u1 - ubicacion ?u2 - ubicacion)
         :precondition (and
             (dron-medio-lleno ?d)
-            (ubi-dron ?d ?u1)
-            (dron-en-deposito ?d)
+            (ubicacion-dron ?d ?u1)
+            (at-deposito ?d)
         )
         :effect (and
-            (dron-volando ?d)
-            (not(dron-en-deposito ?d))
-            (not(ubi-dron ?d ?u1))
-            (ubi-dron ?d ?u2)
+            (volando ?d)
+            (not(at-deposito ?d))
+            (not(ubicacion-dron ?d ?u1))
+            (ubicacion-dron ?d ?u2)
         )
     )
 
     (:action salir_del_deposito_lleno
-        :parameters (?d - dron ?u1 - ubi ?u2 - ubi)
+        :parameters (?d - dron ?u1 - ubicacion ?u2 - ubicacion)
         :precondition (and
             (dron-lleno ?d)
-            (ubi-dron ?d ?u1)
-            (dron-en-deposito ?d)
+            (ubicacion-dron ?d ?u1)
+            (at-deposito ?d)
         )
         :effect (and
-            (dron-volando ?d)
-            (not(dron-en-deposito ?d))
-            (not(ubi-dron ?d ?u1))
-            (ubi-dron ?d ?u2)
+            (volando ?d)
+            (not(at-deposito ?d))
+            (not(ubicacion-dron ?d ?u1))
+            (ubicacion-dron ?d ?u2)
         )
     )
 
     (:action volver_al_deposito
         :parameters (?d - dron)
         :precondition (and
-            (free-brazo1 ?d)
-            (free-brazo2 ?d)
-            (dron-modo-descarga ?d)
+            (free-b1 ?d)
+            (free-b2 ?d)
+            (descargando ?d)
         )
         :effect (and
-            (dron-en-deposito ?d)
-            (not(dron-modo-descarga ?d))
+            (at-deposito ?d)
+            (not(descargando ?d))
         )
     )
 
