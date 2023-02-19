@@ -10,6 +10,9 @@
     )
 
     (:init
+        (= (distancia-recorrida) 0)
+        (= (peso-cajas) 0)
+
         (ubicacion-dron dron1 deposito)
 
         (ubicacion-caja caja1 deposito)
@@ -27,5 +30,11 @@
         )
     )
 
-    ;(:metric minimize (total-cost))
+    (:metric minimize 
+        (+
+        (distancia-recorrida)
+        (peso-cajas)
+        )
+
+    )
 )

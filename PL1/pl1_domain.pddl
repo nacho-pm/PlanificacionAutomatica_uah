@@ -1,6 +1,11 @@
+;Autores:
+;   - Jaime Diez Buendía
+;   - Francisco Gonzalez Velasco
+;   - Ignacio Peñalver Martin
+
 (define (domain pl1_domain)
 
-    (:requirements :strips :typing)
+    (:requirements :strips :typing :fluents)
     (:types
         dron humano caja ubicacion contenido - object
     )
@@ -12,10 +17,6 @@
         (ubicacion-dron ?d - dron ?u - ubicacion)
 
         (volando ?d - dron)
-        (parado ?d - dron)
-
-        ;(dron-lleno ?d - dron)
-        ;(dron-medio-lleno ?d - dron)
 
         (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
@@ -23,8 +24,13 @@
 
     )
 
-    ;total_cost que no tenga paramaetros
-    ;-----------------------acciones------------------------------
+    ;---functions
+    (:functions
+        (distancia-recorrida)
+        (peso-cajas)
+    )
+
+    ;---acciones
 
 
     (:action coger_cajas
@@ -39,6 +45,21 @@
         :effect (and
             (caja-en-dron ?c ?d)
             (caja-en-dron ?c2 ?d)
+            (increase (peso-cajas) 2)
+        )
+    )
+
+    (:action coger_caja
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (ubicacion-caja ?c ?u)
+            (contenido-caja ?con ?c)
+        )
+        :effect (and
+            (caja-en-dron ?c ?d)
+            (increase (peso-cajas) 1)
+            
         )
     )
 
@@ -52,6 +73,7 @@
             (not(ubicacion-dron ?d ?u1))
             (ubicacion-dron ?d ?u2)
             (volando ?d)
+            (increase (distancia-recorrida) 5)
         )
     )
 
@@ -64,7 +86,9 @@
             (caja-en-dron ?c ?d)
             )
         :effect (and
+            (not(caja-en-dron ?c ?d))
             (humano-necesita ?h ?con)
+            (decrease (peso-cajas) 1)
             )
     )
 
