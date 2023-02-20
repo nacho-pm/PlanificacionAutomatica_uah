@@ -167,9 +167,9 @@ def main():
         print("You must specify --drones (use --help for help)")
         sys.exit(1)
 
-    if options.carriers is None:
-        print("You must specify --carriers (use --help for help)")
-        sys.exit(1)
+    #if options.carriers is None:
+    #    print("You must specify --carriers (use --help for help)")
+    #    sys.exit(1)
 
     if options.locations is None:
         print("You must specify --locations (use --help for help)")
@@ -200,7 +200,7 @@ def main():
         sys.exit(1)
 
     print("Drones\t\t", options.drones)
-    print("Carriers\t", options.carriers)
+    #print("Carriers\t", options.carriers)
     print("Locations\t", options.locations)
     print("Persons\t\t", options.persons)
     print("Crates\t\t", options.crates)
@@ -221,8 +221,8 @@ def main():
         location.append("loc" + str(x + 1))
     for x in range(options.drones):
         drone.append("drone" + str(x + 1))
-    for x in range(options.carriers):
-        carrier.append("carrier" + str(x + 1))
+    #for x in range(options.carriers):
+    #    carrier.append("carrier" + str(x + 1))
     for x in range(options.persons):
         person.append("person" + str(x + 1))
     for x in range(options.crates):
@@ -246,7 +246,11 @@ def main():
     need = setup_person_needs(options, crates_with_contents)
 
     # Define a problem name
-    problem_name = "drone_problem_d" + str(options.drones) + "_r" + str(options.carriers) + \
+    #problem_name = "drone_problem_d" + str(options.drones) + "_r" + str(options.carriers) + \
+    #               "_l" + str(options.locations) + "_p" + str(options.persons) + "_c" + str(options.crates) + \
+    #               "_g" + str(options.goals) + "_ct" + str(len(content_types))
+
+    problem_name = "drone_problem_d" + str(options.drones) + \
                    "_l" + str(options.locations) + "_p" + str(options.persons) + "_c" + str(options.crates) + \
                    "_g" + str(options.goals) + "_ct" + str(len(content_types))
 
