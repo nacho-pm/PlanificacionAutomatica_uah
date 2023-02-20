@@ -19,7 +19,7 @@ import sys
 # Hard-coded options
 ########################################################################################
 
-# Crates will have different contents, such as food and medicine.
+# cajas will have different contents, such as food and medicine.
 # You can change this to generate other contents if you want.
 
 content_types = ["comida", "medicinas", "bebida"]
@@ -41,8 +41,8 @@ content_types = ["comida", "medicinas", "bebida"]
 # eventually use them implicitly by using *distances* in order to
 # calculate flight times.
 #
-# This function returns the euclidean distance between two locations.
-# The locations are given via their integer index.  You won't have to
+# This function returns the euclidean distance between two ubicaciones.
+# The ubicaciones are given via their integer index.  You won't have to
 # use this other than indirectly through the flight cost function.
 def distance(location_coords, location_num1, location_num2):
     x1 = location_coords[location_num1][0]
@@ -53,38 +53,38 @@ def distance(location_coords, location_num1, location_num2):
 
 
 # This function returns the action cost of flying between two
-# locations supplied by their integer indexes.  You can use this
+# ubicaciones supplied by their integer indexes.  You can use this
 # function when you extend the problem generator to generate action
 # costs.
 def flight_cost(location_coords, location_num1, location_num2):
     return int(distance(location_coords, location_num1, location_num2)) + 1
 
 
-# When you run this script you specify the *total* number of crates
-# you want.  The function below determines randomly which crates
-# will have a specific type of contents.  crates_with_contents[0]
-# is a list of crates containing content_types[0] (in our
+# When you run this script you specify the *total* number of cajas
+# you want.  The function below determines randomly which cajas
+# will have a specific type of contents.  cajas_with_contents[0]
+# is a list of cajas containing content_types[0] (in our
 # example "food"), and so on.
 # Note: Will have at least one crate per type!
 
 def setup_content_types(options):
     while True:
-        num_crates_with_contents = []
-        crates_left = options.crates
+        num_cajas_with_contents = []
+        cajas_left = options.cajas
         for x in range(len(content_types) - 1):
             types_after_this = len(content_types) - x - 1
-            max_now = crates_left - types_after_this
-            # print x, types_after_this, crates_left, len(content_types), max_now
+            max_now = cajas_left - types_after_this
+            # print x, types_after_this, cajas_left, len(content_types), max_now
             num = random.randint(1, max_now)
             # print num
-            num_crates_with_contents.append(num)
-            crates_left -= num
-        num_crates_with_contents.append(crates_left)
-        # print(num_crates_with_contents)
+            num_cajas_with_contents.append(num)
+            cajas_left -= num
+        num_cajas_with_contents.append(cajas_left)
+        # print(num_cajas_with_contents)
 
         # If we have 10 medicine and 4 food, with 7 people,
         # we can support at most 7+4=11 goals.
-        maxgoals = sum(min(num_crates, options.persons) for num_crates in num_crates_with_contents)
+        maxgoals = sum(min(num_cajas, options.persons) for num_cajas in num_cajas_with_contents)
 
         # Check if the randomization supports the number of goals we want to generate.
         # Otherwise, try to randomize again.
@@ -94,20 +94,20 @@ def setup_content_types(options):
 
     print()
     print("Types\tQuantities")
-    for x in range(len(num_crates_with_contents)):
-        if num_crates_with_contents[x] > 0:
-            print(content_types[x] + "\t " + str(num_crates_with_contents[x]))
+    for x in range(len(num_cajas_with_contents)):
+        if num_cajas_with_contents[x] > 0:
+            print(content_types[x] + "\t " + str(num_cajas_with_contents[x]))
 
-    crates_with_contents = []
+    cajas_with_contents = []
     counter = 1
     for x in range(len(content_types)):
-        crates = []
-        for y in range(num_crates_with_contents[x]):
-            crates.append("crate" + str(counter))
+        cajas = []
+        for y in range(num_cajas_with_contents[x]):
+            cajas.append("crate" + str(counter))
             counter += 1
-        crates_with_contents.append(crates)
+        cajas_with_contents.append(cajas)
 
-    return crates_with_contents
+    return cajas_with_contents
 
 
 # This function populates the location_coords list with an X and Y
@@ -115,7 +115,7 @@ def setup_content_types(options):
 # indirectly through the flight cost function.
 def setup_location_coords(options):
     location_coords = [(0, 0)]  # For the depot
-    for x in range(1, options.locations + 1):
+    for x in range(1, options.ubicaciones + 1):
         location_coords.append((random.randint(1, 200), random.randint(1, 200)))
 
     print("Location positions", location_coords)
@@ -126,7 +126,7 @@ def setup_location_coords(options):
 # After you run this, need[personid][contentid] is true if and only if
 # the goal is for the person to have a crate with the specified content.
 # You will use this to create goal statements in PDDL.
-def setup_person_needs(options, crates_with_contents):
+def setup_person_needs(options, cajas_with_contents):
     need = [[False for i in range(len(content_types))] for j in range(options.persons)]
     goals_per_contents = [0 for i in range(len(content_types))]
 
@@ -136,9 +136,9 @@ def setup_person_needs(options, crates_with_contents):
         while not generated:
             rand_person = random.randint(0, options.persons - 1)
             rand_content = random.randint(0, len(content_types) - 1)
-            # If we have enough crates with that content
+            # If we have enough cajas with that content
             # and the person doesn't already need that content
-            if (goals_per_contents[rand_content] < len(crates_with_contents[rand_content])
+            if (goals_per_contents[rand_content] < len(cajas_with_contents[rand_content])
                     and not need[rand_person][rand_content]):
                 need[rand_person][rand_content] = True
                 goals_per_contents[rand_content] += 1
@@ -156,10 +156,10 @@ def main():
     parser = OptionParser(usage='python generator.py [-help] options...')
     parser.add_option('-d', '--drones', metavar='NUM', dest='drones', action='store', type=int, help='the number of drones')
     #parser.add_option('-r', '--carriers', metavar='NUM', type=int, dest='carriers', help='the number of carriers, for later labs; use 0 for no carriers')
-    parser.add_option('-l', '--locations', metavar='NUM', type=int, dest='locations', help='the number of locations apart from the depot ')
+    parser.add_option('-l', '--ubicaciones', metavar='NUM', type=int, dest='ubicaciones', help='the number of ubicaciones apart from the depot ')
     parser.add_option('-p', '--persons', metavar='NUM', type=int, dest='persons', help='the number of persons')
-    parser.add_option('-c', '--crates', metavar='NUM', type=int, dest='crates', help='the number of crates available')
-    parser.add_option('-g', '--goals', metavar='NUM', type=int, dest='goals', help='the number of crates assigned in the goal')
+    parser.add_option('-c', '--cajas', metavar='NUM', type=int, dest='cajas', help='the number of cajas available')
+    parser.add_option('-g', '--goals', metavar='NUM', type=int, dest='goals', help='the number of cajas assigned in the goal')
 
     (options, args) = parser.parse_args()
 
@@ -171,28 +171,28 @@ def main():
     #    print("You must specify --carriers (use --help for help)")
     #    sys.exit(1)
 
-    if options.locations is None:
-        print("You must specify --locations (use --help for help)")
+    if options.ubicaciones is None:
+        print("You must specify --ubicaciones (use --help for help)")
         sys.exit(1)
 
     if options.persons is None:
         print("You must specify --persons (use --help for help)")
         sys.exit(1)
 
-    if options.crates is None:
-        print("You must specify --crates (use --help for help)")
+    if options.cajas is None:
+        print("You must specify --cajas (use --help for help)")
         sys.exit(1)
 
     if options.goals is None:
         print("You must specify --goals (use --help for help)")
         sys.exit(1)
 
-    if options.goals > options.crates:
-        print("Cannot have more goals than crates")
+    if options.goals > options.cajas:
+        print("Cannot have more goals than cajas")
         sys.exit(1)
 
-    if len(content_types) > options.crates:
-        print("Cannot have more content types than crates:", content_types)
+    if len(content_types) > options.cajas:
+        print("Cannot have more content types than cajas:", content_types)
         sys.exit(1)
 
     if options.goals > len(content_types) * options.persons:
@@ -201,14 +201,14 @@ def main():
 
     print("Drones\t\t", options.drones)
     #print("Carriers\t", options.carriers)
-    print("Locations\t", options.locations)
+    print("Ubicaciones\t", options.ubicaciones)
     print("Persons\t\t", options.persons)
-    print("Crates\t\t", options.crates)
+    print("Cajas\t\t", options.cajas)
     print("Goals\t\t", options.goals)
 
     # Setup all lists of objects
 
-    # These lists contain the names of all Drones, locations, and so on.
+    # These lists contain the names of all Drones, ubicaciones, and so on.
 
     drone = []
     person = []
@@ -223,7 +223,7 @@ def main():
     l1.append("mercado")
     l1.append("deposito")
 
-    for x in range(options.locations):
+    for x in range(options.ubicaciones):
         aux= random.choice(l1)
         location.append(aux)
         l1.remove(aux)
@@ -238,14 +238,14 @@ def main():
     #    carrier.append("carrier" + str(x + 1))
     for x in range(options.persons):
         person.append("persona" + str(x + 1))
-    for x in range(options.crates):
+    for x in range(options.cajas):
         crate.append("caja" + str(x + 1))
     
-    # Determine the set of crates for each content.
+    # Determine the set of cajas for each content.
     # If content_types[0] is "food",
-    # then crates_with_contents[0] is a list
-    # containing the names of all crates that contain food.
-    crates_with_contents = setup_content_types(options)
+    # then cajas_with_contents[0] is a list
+    # containing the names of all cajas that contain food.
+    cajas_with_contents = setup_content_types(options)
 
     # Generates coordinates for each location.
     # You will only use this indirectly,
@@ -256,15 +256,15 @@ def main():
     # If person[0] is "person0",
     # and content_types[1] is "medicine",
     # then needs[0][1] is true iff person0 needs medicine.
-    need = setup_person_needs(options, crates_with_contents)
+    need = setup_person_needs(options, cajas_with_contents)
 
     # Define a problem name
     #problem_name = "drone_problem_d" + str(options.drones) + "_r" + str(options.carriers) + \
-    #               "_l" + str(options.locations) + "_p" + str(options.persons) + "_c" + str(options.crates) + \
+    #               "_l" + str(options.ubicaciones) + "_p" + str(options.persons) + "_c" + str(options.cajas) + \
     #               "_g" + str(options.goals) + "_ct" + str(len(content_types))
 
     problem_name = "drone_problem_d" + str(options.drones) + \
-                   "_l" + str(options.locations) + "_p" + str(options.persons) + "_c" + str(options.crates) + \
+                   "_l" + str(options.ubicaciones) + "_p" + str(options.persons) + "_c" + str(options.cajas) + \
                    "_g" + str(options.goals) + "_ct" + str(len(content_types))
 
     # Open output file
