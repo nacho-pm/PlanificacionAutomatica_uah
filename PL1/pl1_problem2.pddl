@@ -21,9 +21,9 @@
         (ubicacion-caja caja4 deposito)
 
 
-        (ubicacion-humano-herido humano1 campo)
-        (ubicacion-humano-herido humano2 hospital)
-        (ubicacion-humano-herido humano3 mercado)
+        (ubicacion-humano humano1 campo)
+        (ubicacion-humano humano2 hospital)
+        (ubicacion-humano humano3 mercado)
 
 
         (contenido-caja comida caja1)

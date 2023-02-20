@@ -17,15 +17,17 @@
 
         (ubicacion-caja caja1 deposito)
 
-        (ubicacion-humano-herido humano1 campo)
+        (ubicacion-humano humano1 campo)
 
         (contenido-caja comida caja1)
+
+        (humano-necesita humano1 comida)
 
     )
 
     (:goal
         (and
-            (humano-necesita humano1 comida)
+            (humano-satisfecho humano1 comida)
             (ubicacion-dron dron1 deposito)
         )
     )
