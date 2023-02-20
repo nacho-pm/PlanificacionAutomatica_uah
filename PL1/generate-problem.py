@@ -22,7 +22,7 @@ import sys
 # Crates will have different contents, such as food and medicine.
 # You can change this to generate other contents if you want.
 
-content_types = ["food", "medicine"]
+content_types = ["comida", "medicinas", "bebida"]
 
 
 ########################################################################################
@@ -216,17 +216,30 @@ def main():
     carrier = []
     location = []
 
-    location.append("depot")
+
+    l1 =[]
+    l1.append("hospital")
+    l1.append("campo")
+    l1.append("mercado")
+    l1.append("deposito")
+
     for x in range(options.locations):
-        location.append("loc" + str(x + 1))
+        aux= random.choice(l1)
+        location.append(aux)
+        l1.remove(aux)
+        if(len(l1)==0):
+            location.append("ubi" + str(x + 1))
+
+
     for x in range(options.drones):
-        drone.append("drone" + str(x + 1))
+        drone.append("dron" + str(x + 1))
+
     #for x in range(options.carriers):
     #    carrier.append("carrier" + str(x + 1))
     for x in range(options.persons):
-        person.append("person" + str(x + 1))
+        person.append("persona" + str(x + 1))
     for x in range(options.crates):
-        crate.append("crate" + str(x + 1))
+        crate.append("caja" + str(x + 1))
     
     # Determine the set of crates for each content.
     # If content_types[0] is "food",
@@ -259,8 +272,8 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("(:domain drone-domain)\n")
-        f.write("(:objects\n")
+        f.write("\t(:domain pl1_domain)\n")
+        f.write("\t(:objects\n")
 
         ######################################################################
         # Write objects
@@ -269,52 +282,57 @@ def main():
         # to suit your domain.
 
         for x in drone:
-            f.write("\t" + x + " - dron\n")
+            f.write("\t\t" + x + " - dron\n")
 
         for x in location:
-            f.write("\t" + x + " - ubicacion\n")
+            f.write("\t\t" + x + " - ubicacion\n")
 
         for x in crate:
-            f.write("\t" + x + " - caja\n")
+            f.write("\t\t" + x + " - caja\n")
 
         for x in content_types:
-            f.write("\t" + x + " - contenido\n")
+            f.write("\t\t" + x + " - contenido\n")
 
         for x in person:
-            f.write("\t" + x + " - humano\n")
+            f.write("\t\t" + x + " - humano\n")
 
         #for x in carrier:
             #f.write("\t" + x + " - carrier\n")
 
-        f.write(")\n")
+        f.write("\t)\n")
 
         ######################################################################
         # Generate an initial state
 
-        f.write("(:init\n")
+        f.write("\t(:init\n")
 
         # TODO: Initialize all facts here!
 
+        f.write("\t\t(= (distancia-recorrida) 0)\n")
+        f.write("\t\t(= (peso-cajas) 0)\n")
+        f.write("\n")
+        
         # Todos los drones empiezan en el deposito
         for x in drone:
-            f.write("\t(at-deposito" + x + " - dron)\n")
+            f.write("\t\t(ubicacion-dron " + x + " deposito )\n")
 
         #Inicializamos las personas heridas en sus ubicaciones 
         #¿¿¿¿¿¿¿¿¿LAS PERSONA SE INICIALIZAN ALEATORIAS O HAY QUE PEDIR POR PANTALLA LAS UBICACIONES???????
         for persona in person:
-            ubi_persona = input("Donde se encuntra la persona " + persona + ": ")
-            f.write("\t(ubicacion-humano-herido " + x + ubi_persona + " - dron)\n")
+            ubi_persona = random.choice(location)
+            f.write("\t\t(ubicacion-humano " + persona +" "+ ubi_persona +" )\n")
 
-        f.write(")\n")
+        f.write("\t)\n")
 
         ######################################################################
         # Write Goals
 
-        f.write("(:goal (and\n")
+        f.write("\t(:goal (and\n")
 
         # All Drones should end up at the depot
+        
         for x in drone:
-            f.write("\n")
+            f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
             # TODO: Write a goal that the drone x is at the depot
 
         for x in range(options.persons):
@@ -324,8 +342,18 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
+                    f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")\n")
 
-        f.write("\t))\n")
+        f.write("\t\t))\n")
+
+        f.write("\t(:metric minimize \n")
+        f.write("\t\t(+\n")    
+        f.write("\t\t(distancia-recorrida)\n")  
+        f.write("\t\t(peso-cajas)\n")  
+        f.write("\t\t)\n")  
+        f.write("\t)\n") 
+
+
         f.write(")\n")
 
 
