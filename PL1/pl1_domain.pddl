@@ -7,6 +7,7 @@
 
     (:predicates
         (ubicacion-humano ?h - humano ?u - ubicacion)
+
         (humano-necesita ?h - humano ?con - contenido)
         
         (humano-satisfecho ?h - humano ?con - contenido)
@@ -43,7 +44,6 @@
     )
 
 
-
     (:action volar
         :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
         :precondition (and
@@ -68,6 +68,7 @@
         :effect (and
             (not(humano-necesita ?h ?con))
             (not(brazo-ocupado ?d ?b ?c ?con))
+            (free-brazo ?d ?b)
             (humano-satisfecho ?h ?con)
             )
     )

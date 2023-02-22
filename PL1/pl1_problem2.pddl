@@ -45,6 +45,7 @@
             (humano-satisfecho humano1 comida)
             (humano-satisfecho humano1 bebida)
             (humano-satisfecho humano2 medicina) 
+
             (ubicacion-dron dron1 deposito)
         )
     )
