@@ -22,7 +22,6 @@
         (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
 
-        (caja-en-brazo ?c - caja ?d - dron ?b - brazo)
 
     )
 
@@ -39,7 +38,6 @@
         )
         :effect (and
             (not(free-brazo ?d ?b))
-            (caja-en-brazo ?c ?d ?b)
             (brazo-ocupado ?d ?b ?c ?con)
         )
     )
@@ -61,16 +59,13 @@
     (:action entregar_caja
         :parameters (?u - ubicacion ?d - dron ?b - brazo ?c - caja ?con - contenido ?h - humano)
         :precondition (and
-            (brazo-dron ?d ?b)
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)
             (ubicacion-humano ?h ?u)
             (contenido-caja ?con ?c)
             (brazo-ocupado ?d ?b ?c ?con)
-            (caja-en-brazo ?c ?d ?b)
             )
         :effect (and
-            (not(caja-en-brazo ?c ?d ?b))
             (not(humano-necesita ?h ?con))
             (not(brazo-ocupado ?d ?b ?c ?con))
             (humano-satisfecho ?h ?con)
