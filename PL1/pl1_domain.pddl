@@ -1,11 +1,6 @@
-;Autores:
-;   - Jaime Diez Buendía
-;   - Francisco Gonzalez Velasco
-;   - Ignacio Peñalver Martin
-
 (define (domain pl1_domain)
 
-    (:requirements :strips :typing :fluents) ; SOLO MODO STRIPS O TB SE PUEDEN LOS OTROS?
+    (:requirements :strips :typing :fluents)
     (:types
         dron humano caja ubicacion contenido - object
     )
@@ -25,42 +20,11 @@
 
     )
 
-    ;---functions
+
     (:functions
         (distancia-recorrida)
-        (peso-cajas)
+        (brazos-ocupados)
     )
-
-
-    ;---acciones
-    ; (:action coger_cajas
-    ;     :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?c2 - caja ?con2 - contenido)
-    ;     :precondition (and
-    ;         (ubicacion-dron ?d ?u)
-    ;         (ubicacion-caja ?c ?u)
-    ;         (contenido-caja ?con ?c)
-    ;         (ubicacion-caja ?c2 ?u)
-    ;         (contenido-caja ?con2 ?c2)
-    ;     )
-    ;     :effect (and
-    ;         (caja-en-dron ?c ?d)
-    ;         (caja-en-dron ?c2 ?d)
-    ;         (increase (peso-cajas) 2)
-    ;     )
-    ; )
-
-    ; (:action coger_caja
-    ;     :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
-    ;     :precondition (and
-    ;         (ubicacion-dron ?d ?u)
-    ;         (ubicacion-caja ?c ?u)
-    ;         (contenido-caja ?con ?c)
-    ;     )
-    ;     :effect (and
-    ;         (caja-en-dron ?c ?d)
-    ;         (increase (peso-cajas) 1)
-    ;     )
-    ; )
 
 
     (:action pick_box
@@ -69,11 +33,11 @@
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
             (contenido-caja ?con ?c)
-            (< (peso-cajas) 2)
+            (< (brazos-ocupados) 2)
         )
         :effect (and
             (caja-en-dron ?c ?d)
-            (increase (peso-cajas) 1)
+            (increase (brazos-ocupados) 1)
         )
     )
 
@@ -88,7 +52,7 @@
             (not(ubicacion-dron ?d ?origen))
             (ubicacion-dron ?d ?destino)
             (volando ?d)
-            (increase (distancia-recorrida) 5) ; ????????? POR QUÉ?
+            (increase (distancia-recorrida) 5)
         )
     )
 
@@ -105,7 +69,7 @@
             (not(caja-en-dron ?c ?d))
             (not(humano-necesita ?h ?con))
             (humano-satisfecho ?h ?con)
-            (decrease (peso-cajas) 1)
+            (decrease (brazos-ocupados) 1)
             )
     )
 
