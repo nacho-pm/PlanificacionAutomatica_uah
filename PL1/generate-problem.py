@@ -157,9 +157,9 @@ def main():
     parser.add_option('-d', '--drones', metavar='NUM', dest='drones', action='store', type=int, help='the number of drones')
     #parser.add_option('-r', '--carriers', metavar='NUM', type=int, dest='carriers', help='the number of carriers, for later labs; use 0 for no carriers')
     parser.add_option('-l', '--ubicaciones', metavar='NUM', type=int, dest='ubicaciones', help='the number of ubicaciones apart from the depot ')
-    parser.add_option('-p', '--persons', metavar='NUM', type=int, dest='persons', help='the number of persons')
+    parser.add_option('-p', '--personas', metavar='NUM', type=int, dest='persons', help='the number of persons')
     parser.add_option('-c', '--cajas', metavar='NUM', type=int, dest='cajas', help='the number of cajas available')
-    parser.add_option('-g', '--goals', metavar='NUM', type=int, dest='goals', help='the number of cajas assigned in the goal')
+    parser.add_option('-g', '--metas', metavar='NUM', type=int, dest='goals', help='the number of cajas assigned in the goal')
 
     (options, args) = parser.parse_args()
 
@@ -224,16 +224,21 @@ def main():
     l1.append("hospital")
     l1.append("campo")
     l1.append("mercado")
-    l1.append("deposito")
+    l1.append("cine")
+    l1.append("bolera")
+    l1.append("parque")
+    l1.append("estadio")
+    l1.append("teatro")
 
-    location.append("deposito")
-    l1.remove("deposito")
+
     for x in range(options.ubicaciones-1):
-        aux= random.choice(l1)
-        location.append(aux)
-        l1.remove(aux)
-        if(len(l1)==0):
-            location.append("ubi" + str(x + 1))
+        # if(len(l1)==0):
+        #     location.append("ubi" + str(x + 1))
+        # else:
+            aux= random.choice(l1)
+            location.append(aux)
+            # l1.remove(aux)
+        
 
 
     for x in range(options.drones):
@@ -295,6 +300,8 @@ def main():
         for x in location:
             f.write("\t\t" + x + " - ubicacion\n")
 
+        f.write("\t\tdeposito - ubicacion\n")
+
         for x in caja:
             f.write("\t\t" + x + " - caja\n")
 
@@ -347,6 +354,14 @@ def main():
                 else :
                     content_name = "bebida"
                     f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+
+        f.write("\n")
+                
+        # Todos los drones empiezan en el deposito
+        for x in caja:
+            f.write("\t\t(ubicacion-caja " + x + " deposito )\n")
+
+        f.write("\n")
 
 
         f.write("\n")

@@ -4,9 +4,9 @@
 		dron1 - dron
 		brazo1 - brazo
 		brazo2 - brazo
-		deposito - ubicacion
-		mercado - ubicacion
 		hospital - ubicacion
+		mercado - ubicacion
+		deposito - ubicacion
 		caja1 - caja
 		caja2 - caja
 		caja3 - caja
@@ -25,23 +25,27 @@
 
 		(ubicacion-dron dron1 deposito )
 
-		(ubicacion-humano persona1 mercado )
-		(ubicacion-humano persona2 deposito )
-		(ubicacion-humano persona3 deposito )
+		(ubicacion-humano persona1 hospital )
+		(ubicacion-humano persona2 hospital )
+		(ubicacion-humano persona3 mercado )
 
 		(contenido-caja caja1 comida)
 		(contenido-caja caja2 medicinas)
 		(contenido-caja caja3 bebida)
+		(ubicacion-caja caja1 deposito )
+		(ubicacion-caja caja2 deposito )
+		(ubicacion-caja caja3 deposito )
+
 
 		(humano-necesita persona1 bebida)
 		(humano-necesita persona2 comida)
-		(humano-necesita persona3 medicinas)
+		(humano-necesita persona2 medicinas)
 	)
 	(:goal (and
 		(ubicacion-dron dron1 deposito)
 
 		(humano-satisfecho persona1 bebida)
 		(humano-satisfecho persona2 comida)
-		(humano-satisfecho persona3 medicinas)
+		(humano-satisfecho persona2 medicinas)
 		))
 )
