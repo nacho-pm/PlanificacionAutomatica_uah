@@ -220,7 +220,7 @@ def main():
     brazo.append("brazo1")
     brazo.append("brazo2")
 
-    l1 =[]
+    l1=[]
     l1.append("hospital")
     l1.append("campo")
     l1.append("mercado")
@@ -232,12 +232,12 @@ def main():
 
 
     for x in range(options.ubicaciones-1):
-        # if(len(l1)==0):
-        #     location.append("ubi" + str(x + 1))
-        # else:
+        if(len(l1)==0):
+             location.append("ubi" + str(x + 1))
+        else:
             aux= random.choice(l1)
             location.append(aux)
-            # l1.remove(aux)
+            l1.remove(aux)
         
 
 
@@ -282,7 +282,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("\t(:domain pl1_domain)\n")
+        f.write("\t(:domain plocation_domain)\n")
         f.write("\t(:objects\n")
 
         ######################################################################
@@ -347,15 +347,15 @@ def main():
         for x in range(len(caja)):
                 if caja[x] in cajas_with_contents[0]:
                     content_name = "comida"
-                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")
                 elif caja[x] in cajas_with_contents[1]:
                     content_name = "medicinas"
-                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")                
                 else :
                     content_name = "bebida"
-                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")
 
-        f.write("\n")
+        
                 
         # Todos los drones empiezan en el deposito
         for x in caja:
