@@ -356,7 +356,7 @@ def main():
                     f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")
 
         
-                
+        f.write("\n")        
         # Todos los drones empiezan en el deposito
         for x in caja:
             f.write("\t\t(ubicacion-caja " + x + " deposito )\n")
