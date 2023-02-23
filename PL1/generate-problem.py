@@ -282,7 +282,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("\t(:domain plocation_domain)\n")
+        f.write("\t(:domain pl1_domain)\n")
         f.write("\t(:objects\n")
 
         ######################################################################
@@ -399,7 +399,7 @@ def main():
                     # with this specific content
                     f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
 
-        f.write("\t\t))\n")
+        f.write("\t))\n")
 
         f.write(")\n")
 
