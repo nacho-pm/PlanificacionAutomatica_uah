@@ -103,7 +103,7 @@ def setup_content_types(options):
     for x in range(len(content_types)):
         cajas = []
         for y in range(num_cajas_with_contents[x]):
-            cajas.append("crate" + str(counter))
+            cajas.append("caja" + str(counter))
             counter += 1
         cajas_with_contents.append(cajas)
 
@@ -212,10 +212,13 @@ def main():
 
     drone = []
     person = []
-    crate = []
-    carrier = []
+    caja = []
+    brazo = []
     location = []
 
+
+    brazo.append("brazo1")
+    brazo.append("brazo2")
 
     l1 =[]
     l1.append("hospital")
@@ -223,7 +226,9 @@ def main():
     l1.append("mercado")
     l1.append("deposito")
 
-    for x in range(options.ubicaciones):
+    location.append("deposito")
+    l1.remove("deposito")
+    for x in range(options.ubicaciones-1):
         aux= random.choice(l1)
         location.append(aux)
         l1.remove(aux)
@@ -239,7 +244,7 @@ def main():
     for x in range(options.persons):
         person.append("persona" + str(x + 1))
     for x in range(options.cajas):
-        crate.append("caja" + str(x + 1))
+        caja.append("caja" + str(x + 1))
     
     # Determine the set of cajas for each content.
     # If content_types[0] is "food",
@@ -284,10 +289,13 @@ def main():
         for x in drone:
             f.write("\t\t" + x + " - dron\n")
 
+        for x in brazo:
+            f.write("\t\t" + x + " - brazo\n")
+
         for x in location:
             f.write("\t\t" + x + " - ubicacion\n")
 
-        for x in crate:
+        for x in caja:
             f.write("\t\t" + x + " - caja\n")
 
         for x in content_types:
@@ -308,19 +316,49 @@ def main():
 
         # TODO: Initialize all facts here!
 
-        f.write("\t\t(= (distancia-recorrida) 0)\n")
-        f.write("\t\t(= (peso-cajas) 0)\n")
+        for x in brazo: 
+            f.write("\t\t(brazo-dron dron1 " + x + ")\n")
+            f.write("\t\t(free-brazo dron1 " + x + ")\n")
+
         f.write("\n")
         
         # Todos los drones empiezan en el deposito
         for x in drone:
             f.write("\t\t(ubicacion-dron " + x + " deposito )\n")
 
+        f.write("\n")
+
         #Inicializamos las personas heridas en sus ubicaciones 
         #¿¿¿¿¿¿¿¿¿LAS PERSONA SE INICIALIZAN ALEATORIAS O HAY QUE PEDIR POR PANTALLA LAS UBICACIONES???????
         for persona in person:
             ubi_persona = random.choice(location)
             f.write("\t\t(ubicacion-humano " + persona +" "+ ubi_persona +" )\n")
+
+        f.write("\n")
+
+        # definir los contenidos de las cajas
+        for x in range(len(caja)):
+                if caja[x] in cajas_with_contents[0]:
+                    content_name = "comida"
+                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+                elif caja[x] in cajas_with_contents[1]:
+                    content_name = "medicinas"
+                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+                else :
+                    content_name = "bebida"
+                    f.write("\t\t(contenido-caja " + caja[x] + " " + content_name + ")\n")
+
+
+        f.write("\n")
+
+        for x in range(options.persons):
+            for y in range(len(content_types)):
+                if need[x][y]:
+                    person_name = person[x]
+                    content_name = content_types[y]
+                    # TODO: write a goal that the person needs a crate
+                    # with this specific content
+                    f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")\n")
 
         f.write("\t)\n")
 
@@ -334,6 +372,8 @@ def main():
         for x in drone:
             f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
             # TODO: Write a goal that the drone x is at the depot
+        
+        f.write("\n")
 
         for x in range(options.persons):
             for y in range(len(content_types)):
@@ -342,17 +382,9 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
-                    f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")\n")
+                    f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
 
         f.write("\t\t))\n")
-
-        f.write("\t(:metric minimize \n")
-        f.write("\t\t(+\n")    
-        f.write("\t\t(distancia-recorrida)\n")  
-        f.write("\t\t(peso-cajas)\n")  
-        f.write("\t\t)\n")  
-        f.write("\t)\n") 
-
 
         f.write(")\n")
 
