@@ -1,7 +1,7 @@
 (define (domain pl1_2_domain)
-    (:requirements :strips :typing :fluents) 
+    (:requirements :strips :typing ) 
     (:types
-        dron container humano caja ubicacion contenido - object
+        dron transportador humano caja ubicacion contenido num - object
     )
     (:predicates
         (ubicacion-humano ?h - humano ?u - ubicacion)
@@ -12,60 +12,133 @@
 
         (ubicacion-dron ?d - dron ?u - ubicacion)
 
-        (volando ?d - dron)
+        (ubicacion-transportador ?t - transportador ?u - ubicacion)
 
         (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
 
-        (peso-contenedor)
+        (siguiente ?numA ?numB - num)
+
+        (llenado-actual ?t - transportador ?numZ -num)
+
+        (dron-lleno ?d - dron )
+        (dron-vacio ?d - dron )
+
     )
 
 
-    (:action poner-caja-entransportador
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
+    (:action poner-caja-en-transportador
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?t - transportador ?desde ?hasta - num)
         :precondition (and
- 
+            (ubicacion-dron ?d ?u)
+            (ubicacion-caja ?c ?u)
+            (ubicacion-transportador ?t ?u)
+            (llenado-actual ?t ?desde)
+            (siguiente ?desde ?hasta)
+            (dron-lleno ?d)
         )
         :effect (and
-
+            (not (llenado-actual ?t ?desde))
+            (llenado-actual ?t ?hasta)
+            (not (dron-lleno ?d))
+            (dron-vacio ?d)
         )
     )
-        
+
+
+    (:action coger-transportador 
+        :parameters (?u - ubicacion ?d - dron ?t - transportador)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (dron-vacio ?d)
+        )
+        :effect (and
+            (dron-lleno ?d)
+            (not(dron-vacio ?d))
+        )
+    )
 
     (:action mover-transportador 
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
+        :parameters (?origen ?destino - ubicacion ?t - transportador  ?d - dron)
         :precondition (and
- 
+            (ubicacion-dron ?d ?origen)
+            (ubicacion-transportador ?t ?origen)
+            (dron-lleno ?d )
         )
         :effect (and
-
+            (not(ubicacion-dron ?d ?origen))
+            (not(ubicacion-transportador ?t ?origen))
+            (ubicacion-dron ?d ?destino)
+            (ubicacion-transportador ?t ?destino)
         )
     )
 
-    (:action  coger-caja-del-transportador
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
+
+    (:action soltar-transportador 
+        :parameters (?u - ubicacion ?d - dron ?t - transportador)
         :precondition (and
- 
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (dron-lleno ?d)
         )
         :effect (and
+            (dron-vacio ?d)
+            (not(dron-lleno ?d))
+        )
+    )
 
+    
+    (:action  coger-caja-del-transportador
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?desde ?hasta - num)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (llenado-actual ?t ?hasta)
+            (siguiente ?hasta ?desde)
+            (dron-vacio ?d)
+        )
+        :effect (and
+            (not (llenado-actual ?t ?hasta))
+            (llenado-actual ?t ?desde)
+            (dron-lleno ?d)
+            (not(dron-vacio ?d))
         )
     )
 
 
     (:action pick_box
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
             (contenido-caja ?con ?c)
-            (< (peso-contenedor) 2)
+            (dron-vacio ?d)
         )
         :effect (and
-            (caja-en-dron ?c ?d)
-            (increase (peso-contenedor) 1)
+            (dron-lleno ?d)
+            (not(dron-vacio ?d))
         )
     )
+
+    (:action entregar-caja-dron
+        :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
+        :precondition (and
+            (humano-necesita ?h ?con)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-humano ?h ?u)
+            (contenido-caja ?con ?c)
+            (dron-lleno ?d)
+            )
+        :effect (and
+            (not(dron-lleno ?d ))
+            (dron-vacio ?d)
+            (not(humano-necesita ?h ?con))
+            (humano-satisfecho ?h ?con)
+            )
+    )
+
+    
     (:action volar
         :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
         :precondition (and
@@ -74,24 +147,7 @@
         :effect (and
             (not(ubicacion-dron ?d ?origen))
             (ubicacion-dron ?d ?destino)
-            (volando ?d)
-            (increase (distancia-recorrida) 5) 
         )
     )
-    (:action entregar_caja
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?h - humano)
-        :precondition (and
-            (humano-necesita ?h ?con)
-            (ubicacion-dron ?d ?u)
-            (ubicacion-humano ?h ?u)
-            (contenido-caja ?con ?c)
-            (caja-en-dron ?c ?d)
-            )
-        :effect (and
-            (not(caja-en-dron ?c ?d))
-            (not(humano-necesita ?h ?con))
-            (humano-satisfecho ?h ?con)
-            (decrease (peso-contenedor) 1)
-            )
-    )
+    
 )

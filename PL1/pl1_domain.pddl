@@ -14,8 +14,6 @@
 
         (ubicacion-dron ?d - dron ?u - ubicacion)
 
-        (volando ?d - dron)
-
         (brazo-ocupado ?d - dron ?b - brazo ?c - caja ?con - contenido)
         (free-brazo ?d - dron ?b - brazo)
         (brazo-dron ?d - dron ?b - brazo)
@@ -23,9 +21,7 @@
         (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
 
-
     )
-
 
 
     (:action coger_caja
@@ -52,7 +48,6 @@
         :effect (and
             (not(ubicacion-dron ?d ?origen))
             (ubicacion-dron ?d ?destino)
-            (volando ?d)
         )
     )
 
