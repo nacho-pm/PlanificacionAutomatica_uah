@@ -103,6 +103,7 @@
             (llenado-actual ?t ?desde)
             (dron-lleno ?d)
             (not(dron-vacio ?d))
+            (not (ubicacion-caja ?c ?u))
         )
     )
 

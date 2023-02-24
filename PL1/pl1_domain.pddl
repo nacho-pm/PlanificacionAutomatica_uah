@@ -36,6 +36,7 @@
         :effect (and
             (not(free-brazo ?d ?b))
             (brazo-ocupado ?d ?b ?c ?con)
+            (not (ubicacion-caja ?c ?u))
         )
     )
 
