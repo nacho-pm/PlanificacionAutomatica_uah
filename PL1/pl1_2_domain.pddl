@@ -27,6 +27,21 @@
     )
 
 
+   (:action pick_box
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (ubicacion-caja ?c ?u)
+            (contenido-caja ?con ?c)
+            (dron-vacio ?d)
+        )
+        :effect (and
+            (dron-lleno ?d)
+            (not(dron-vacio ?d))
+            (not (ubicacion-caja ?c ?u))
+        )
+    )
+
     (:action poner-caja-en-transportador
         :parameters (?u - ubicacion ?d - dron ?c - caja ?t - transportador ?desde ?hasta - num)
         :precondition (and
@@ -103,24 +118,11 @@
             (llenado-actual ?t ?desde)
             (dron-lleno ?d)
             (not(dron-vacio ?d))
-            (not (ubicacion-caja ?c ?u))
         )
     )
 
 
-    (:action pick_box
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
-        :precondition (and
-            (ubicacion-dron ?d ?u)
-            (ubicacion-caja ?c ?u)
-            (contenido-caja ?con ?c)
-            (dron-vacio ?d)
-        )
-        :effect (and
-            (dron-lleno ?d)
-            (not(dron-vacio ?d))
-        )
-    )
+ 
 
     (:action entregar-caja-dron
         :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
