@@ -13,9 +13,11 @@
         (ubicacion-dron ?d - dron ?u - ubicacion)
 
         (ubicacion-transportador ?t - transportador ?u - ubicacion)
+        (tansportador-en-dron ?d - dron ?t - transportador)
 
         (ubicacion-caja ?c - caja ?u - ubicacion)
         (contenido-caja ?con - contenido ?c - caja)
+        (caja-en-dron ?c - caja ?con - contenido ?d - dron)
 
         (siguiente ?numA ?numB - num)
 
@@ -27,64 +29,79 @@
     )
 
 
-    (:action poner-caja-en-transportador
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?t - transportador ?desde ?hasta - num)
+    (:action coger-caja
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
+            (contenido-caja ?con ?c)
+            (dron-vacio ?d)
+        )
+        :effect (and
+            (not(dron-vacio ?d))
+            (dron-lleno ?d)
+            (caja-en-dron ?c ?con ?d)
+            
+        )
+    )
+
+    
+
+    (:action meter-caja-en-transportador
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?desde ?hasta - num)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
             (llenado-actual ?t ?desde)
             (siguiente ?desde ?hasta)
+            (caja-en-dron ?c ?con ?d)
             (dron-lleno ?d)
         )
         :effect (and
             (not (llenado-actual ?t ?desde))
+            (not (caja-en-dron ?c ?con ?d))
+            (not (dron-lleno ?d ))
             (llenado-actual ?t ?hasta)
-            (not (dron-lleno ?d))
             (dron-vacio ?d)
         )
     )
 
-
-    (:action coger-transportador 
+    (:action coger-transportador
         :parameters (?u - ubicacion ?d - dron ?t - transportador)
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
             (dron-vacio ?d)
         )
-        :effect (and
-            (dron-lleno ?d)
+        :effect (and 
             (not(dron-vacio ?d))
+            (tansportador-en-dron ?d ?t)
         )
     )
+    
 
-    (:action mover-transportador 
-        :parameters (?origen ?destino - ubicacion ?t - transportador  ?d - dron)
+    (:action volar-con-transportador 
+        :parameters (?origen - ubicacion ?destino - ubicacion ?d - dron ?t - transportador )
         :precondition (and
+            (tansportador-en-dron ?d ?t)
             (ubicacion-dron ?d ?origen)
-            (ubicacion-transportador ?t ?origen)
-            (dron-lleno ?d )
         )
         :effect (and
             (not(ubicacion-dron ?d ?origen))
-            (not(ubicacion-transportador ?t ?origen))
             (ubicacion-dron ?d ?destino)
-            (ubicacion-transportador ?t ?destino)
         )
     )
 
-
-    (:action soltar-transportador 
+    (:action soltar-transportador
         :parameters (?u - ubicacion ?d - dron ?t - transportador)
         :precondition (and
             (ubicacion-dron ?d ?u)
-            (ubicacion-transportador ?t ?u)
-            (dron-lleno ?d)
+            (tansportador-en-dron ?d ?t)
         )
         :effect (and
+            (not(tansportador-en-dron ?d ?t))
+            (ubicacion-transportador ?t ?u)
             (dron-vacio ?d)
-            (not(dron-lleno ?d))
         )
     )
 
@@ -100,46 +117,35 @@
         )
         :effect (and
             (not (llenado-actual ?t ?hasta))
+            (not(dron-vacio ?d))
+            (dron-lleno ?d)
             (llenado-actual ?t ?desde)
-            (dron-lleno ?d)
-            (not(dron-vacio ?d))
+            (caja-en-dron ?c ?con ?d)
         )
     )
 
 
-    (:action pick_box
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
-        :precondition (and
-            (ubicacion-dron ?d ?u)
-            (ubicacion-caja ?c ?u)
-            (contenido-caja ?con ?c)
-            (dron-vacio ?d)
-        )
-        :effect (and
-            (dron-lleno ?d)
-            (not(dron-vacio ?d))
-        )
-    )
-
-    (:action entregar-caja-dron
-        :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
+    (:action entregar-caja
+        :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)
             (ubicacion-humano ?h ?u)
             (contenido-caja ?con ?c)
             (dron-lleno ?d)
+            (caja-en-dron ?c ?con ?d)
             )
         :effect (and
-            (not(dron-lleno ?d ))
-            (dron-vacio ?d)
+            (not(caja-en-dron ?c ?con ?d))
             (not(humano-necesita ?h ?con))
+            (not(dron-lleno ?d))
             (humano-satisfecho ?h ?con)
+            (dron-vacio ?d)
             )
     )
 
     
-    (:action volar
+    (:action volar-sin-transportador
         :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
         :precondition (and
             (ubicacion-dron ?d ?origen)

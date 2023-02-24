@@ -321,7 +321,7 @@ def main():
 
         f.write("\t(:init\n")
 
-        # TODO: Initialize all facts here!
+        #Initialize all facts here!
 
         for x in brazo: 
             f.write("\t\t(brazo-dron dron1 " + x + ")\n")
@@ -371,7 +371,7 @@ def main():
                 if need[x][y]:
                     person_name = person[x]
                     content_name = content_types[y]
-                    # TODO: write a goal that the person needs a crate
+                    # write a goal that the person needs a crate
                     # with this specific content
                     f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")\n")
 
@@ -386,7 +386,7 @@ def main():
         
         for x in drone:
             f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
-            # TODO: Write a goal that the drone x is at the depot
+            # Write a goal that the drone x is at the depot
         
         f.write("\n")
 
@@ -395,7 +395,7 @@ def main():
                 if need[x][y]:
                     person_name = person[x]
                     content_name = content_types[y]
-                    # TODO: write a goal that the person needs a crate
+                    # write a goal that the person needs a crate
                     # with this specific content
                     f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
 

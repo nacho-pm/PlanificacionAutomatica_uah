@@ -165,7 +165,37 @@
 -------------------------------------------------------------
 -------------------------------------------------------------
 
+    (:action coger_transportador 
+        :parameters (?u - ubicacion ?d - dron ?t - transportador)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (dron-vacio ?d)
+        )
+        :effect (and
+            (dron-lleno ?d)
+            (not(dron-vacio ?d))
+            (tansportador-en-dron ?d ?t)
 
+        )
+    )
+
+
+    (:action soltar_transportador 
+        :parameters (?u - ubicacion ?d - dron ?t - transportador)
+        :precondition (and
+            (ubicacion-dron ?d ?u)
+            (tansportador-en-dron ?d ?t)
+            (dron-lleno ?d)
+        )
+        :effect (and
+            (not(dron-lleno ?d))
+            (not(tansportador-en-dron ?d ?t))
+            (dron-vacio ?d)
+            (ubicacion-transportador ?t ?u)
+            
+        )
+    )
 
 
 
