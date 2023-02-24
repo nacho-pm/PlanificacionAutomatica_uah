@@ -1,4 +1,4 @@
-(define (domain pl1_domain)
+(define (domain pl1_1_domain)
 
     (:requirements :strips :typing)
     (:types
@@ -9,7 +9,7 @@
         (ubicacion-humano ?h - humano ?u - ubicacion)
 
         (humano-necesita ?h - humano ?con - contenido)
-        
+
         (humano-satisfecho ?h - humano ?con - contenido)
 
         (ubicacion-dron ?d - dron ?u - ubicacion)
@@ -22,7 +22,6 @@
         (contenido-caja ?con - contenido ?c - caja)
 
     )
-
 
     (:action coger_caja
         :parameters (?u - ubicacion ?d - dron ?b - brazo ?c - caja ?con - contenido)
@@ -38,7 +37,6 @@
             (brazo-ocupado ?d ?b ?c ?con)
         )
     )
-
 
     (:action volar
         :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
@@ -59,13 +57,13 @@
             (ubicacion-humano ?h ?u)
             (contenido-caja ?con ?c)
             (brazo-ocupado ?d ?b ?c ?con)
-            )
+        )
         :effect (and
             (not(humano-necesita ?h ?con))
             (not(brazo-ocupado ?d ?b ?c ?con))
             (free-brazo ?d ?b)
             (humano-satisfecho ?h ?con)
-            )
+        )
     )
 
 )

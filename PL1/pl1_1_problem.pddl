@@ -1,5 +1,5 @@
-(define (problem pl1_problem)
-    (:domain pl1_domain)
+(define (problem pl1_1_problem)
+    (:domain pl1_1_domain)
     (:objects
         humano1 - humano
         dron1 - dron
