@@ -1,4 +1,4 @@
-(define (problem problema2) (:domain pl1_2_domain)
+(define (problem pl1_2_problem) (:domain pl1_2_domain)
 (:objects 
 
     n0 n1 n2 n3 n4 - num

@@ -96,7 +96,6 @@
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
             (trasportador-en-dron ?t ?d)
-            (trasportador-en-dron ?t ?d)
         )
         :effect (and
             (dron-vacio ?d)
