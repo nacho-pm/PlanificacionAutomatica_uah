@@ -33,7 +33,7 @@
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
-            (contenido-caja ?con ?c)
+            (contenido-caja ?c ?con)
             (dron-vacio ?d)
         )
         :effect (and
@@ -129,7 +129,7 @@
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)
             (ubicacion-humano ?h ?u)
-            (contenido-caja ?con ?c)
+            (contenido-caja ?c ?con)
             (caja-en-dron ?c ?d)
             )
         :effect (and
