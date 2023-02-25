@@ -8,7 +8,7 @@
     comida - contenido
     bebida - contenido
     medicinas - contenido
-    deposito campo - ubicacion
+    deposito campo fiesta teatro - ubicacion
     transportador1 - transportador
 )
 
@@ -20,6 +20,8 @@
 
     (ubicacion-dron dron1 deposito)
 
+    (ubicacion-transportador transportador1 deposito)
+
     (ubicacion-caja caja1 deposito)
     (ubicacion-caja caja2 deposito)
     (ubicacion-caja caja3 deposito)
@@ -27,22 +29,21 @@
     (ubicacion-caja caja5 deposito)
     (ubicacion-caja caja6 deposito)
     
-    (ubicacion-transportador transportador1 deposito)
-
-    (dron-vacio dron1)
 
     (ubicacion-humano humano1 campo)
     (ubicacion-humano humano2 campo)
-    (ubicacion-humano humano3 campo)
-    (ubicacion-humano humano4 campo)
-    (ubicacion-humano humano5 campo)
+    (ubicacion-humano humano3 fiesta)
+    (ubicacion-humano humano4 teatro)
+    (ubicacion-humano humano5 fiesta)
 
-    (contenido-caja comida caja1)
-    (contenido-caja bebida caja2)
-    (contenido-caja comida caja3)
-    (contenido-caja medicinas caja4)
-    (contenido-caja bebida caja5)
-    (contenido-caja medicinas caja6)
+    (dron-vacio dron1)
+
+    (contenido-caja caja1 comida)
+    (contenido-caja caja2 bebida)
+    (contenido-caja caja3 medicinas)
+    (contenido-caja caja4 comida)
+    (contenido-caja caja5 medicinas)
+    (contenido-caja caja6 bebida)
 
 
     (humano-necesita humano1 comida)
