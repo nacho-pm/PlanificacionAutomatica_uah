@@ -110,7 +110,7 @@
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
             (llenado-actual ?t ?hasta)
-            (siguiente ?hasta ?desde)
+            (siguiente ?desde ?hasta)
             (dron-vacio ?d)
         )
         :effect (and
