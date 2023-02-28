@@ -29,7 +29,7 @@
 
 
    (:action pick_box
-        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
+        :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
@@ -123,7 +123,7 @@
 
 
     (:action entregar-caja-dron
-        :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido ?t - transportador ?numA - num ?numB - num)
+        :parameters (?h - humano ?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)

@@ -22,6 +22,8 @@
 
     (ubicacion-transportador transportador1 deposito)
 
+    (llenado-actual transportador1 n0)
+
     (ubicacion-caja caja1 deposito)
     (ubicacion-caja caja2 deposito)
     (ubicacion-caja caja3 deposito)
