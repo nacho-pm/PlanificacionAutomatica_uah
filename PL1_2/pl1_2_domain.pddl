@@ -20,6 +20,7 @@
         (dron-vacio ?d - dron )
         (trasportador-en-dron ?t - transportador ?d - dron)
         (caja-en-dron ?c - caja ?d - dron)
+        (caja-en-transportador ?c - caja ?t - transportador)
 
         (humano-necesita ?h - humano ?con - contenido)
         
@@ -48,6 +49,7 @@
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
+            (not(caja-en-transportador ?c ?t))
             (llenado-actual ?t ?desde)
             (siguiente ?desde ?hasta)
             (caja-en-dron ?c ?d)
@@ -55,6 +57,7 @@
         :effect (and
             (not (llenado-actual ?t ?desde))
             (llenado-actual ?t ?hasta)
+            (caja-en-transportador ?c ?t)
             (not (caja-en-dron ?c ?d))
             (dron-vacio ?d)
         )
@@ -109,6 +112,7 @@
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
+            (caja-en-transportador ?c ?t)
             (llenado-actual ?t ?hasta)
             (siguiente ?desde ?hasta)
             (dron-vacio ?d)
@@ -116,6 +120,7 @@
         :effect (and
             (not (llenado-actual ?t ?hasta))
             (llenado-actual ?t ?desde)
+            (not (caja-en-transportador ?c ?t))
             (caja-en-dron ?c ?d)
             (not(dron-vacio ?d))
         )
