@@ -28,6 +28,11 @@
 
     )
 
+    (:functions
+        (total-cost)
+        (fly-cost ?origen ?destino - ubicacion)
+    )
+
 
    (:action pick_box
         :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
@@ -49,7 +54,6 @@
         :precondition (and
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
-            (not(caja-en-transportador ?c ?t))
             (llenado-actual ?t ?desde)
             (siguiente ?desde ?hasta)
             (caja-en-dron ?c ?d)
@@ -144,6 +148,7 @@
             )
     )
 
+
     (:action volar
         :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
         :precondition (and
@@ -154,5 +159,7 @@
             (ubicacion-dron ?d ?destino)
         )
     )
+
+
     
 )

@@ -13,6 +13,7 @@
 )
 
 (:init
+    (=(fly-cost deposito campo) 5)
     (siguiente n0 n1)
     (siguiente n1 n2)
     (siguiente n2 n3)
