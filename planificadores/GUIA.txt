@@ -1,0 +1,16 @@
+TODO ESTO DESDE EL DIRECTORIO DE LOS PLANIFICADORES
+
+downward.sif
+./downward.sif --alias lama-first [ruta-domain] [ruta-problem]
+
+ff
+./ff -o [ruta-domain] -f [ruta-problem]
+
+lpg-td
+./lpg-td -o [ruta-domain] -f [ruta-problem] -n [numero de soluciones]
+
+satplan
+./satplan -solver siege -domain [ruta-domain] -problem [ruta-problem]
+
+sgplan40
+./sgplan40 -o [ruta-domain] -f [ruta-problem] -out "ALBARICOQUE"
