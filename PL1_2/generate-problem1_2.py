@@ -211,14 +211,11 @@ def main():
     # These lists contain the names of all Drones, ubicaciones, and so on.
 
     drone = []
+    transportador=[]
     person = []
     caja = []
-    brazo = []
     location = []
-
-
-    brazo.append("brazo1")
-    brazo.append("brazo2")
+    huecos_transportador =[]
 
     l1=[]
     l1.append("hospital")
@@ -239,7 +236,8 @@ def main():
             location.append(aux)
             l1.remove(aux)
         
-
+    for x in range(5):
+        huecos_transportador.append("n" + str(x))
 
     for x in range(options.drones):
         drone.append("dron" + str(x + 1))
@@ -248,6 +246,7 @@ def main():
     #    carrier.append("carrier" + str(x + 1))
     for x in range(options.persons):
         person.append("persona" + str(x + 1))
+        
     for x in range(options.cajas):
         caja.append("caja" + str(x + 1))
     
@@ -282,7 +281,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("\t(:domain pl1_domain)\n")
+        f.write("\t(:domain pl1_2_domain)\n")
         f.write("\t(:objects\n")
 
         ######################################################################
@@ -294,8 +293,10 @@ def main():
         for x in drone:
             f.write("\t\t" + x + " - dron\n")
 
-        for x in brazo:
-            f.write("\t\t" + x + " - brazo\n")
+        f.write("\t\t" + "transportador1 - transportador\n")
+
+        for x in huecos_transportador:
+            f.write("\t\t" + x + " - num\n")
 
         for x in location:
             f.write("\t\t" + x + " - ubicacion\n")
@@ -323,9 +324,9 @@ def main():
 
         # TODO: Initialize all facts here!
 
-        for x in brazo: 
-            f.write("\t\t(brazo-dron dron1 " + x + ")\n")
-            f.write("\t\t(free-brazo dron1 " + x + ")\n")
+        
+        for n in range (len(huecos_transportador)-1):
+            f.write("\t\t(siguiente " + huecos_transportador[n] +" "+ huecos_transportador[n+1]  +" )\n")
 
         f.write("\n")
         
@@ -334,6 +335,9 @@ def main():
             f.write("\t\t(ubicacion-dron " + x + " deposito )\n")
 
         f.write("\n")
+        f.write("\t\t(ubicacion-transportador transportador1 deposito)\n")
+        f.write("\n")
+        f.write("\t\t(llenado-actual transportador n0)\n")
 
         #Inicializamos las personas heridas en sus ubicaciones 
         #¿¿¿¿¿¿¿¿¿LAS PERSONA SE INICIALIZAN ALEATORIAS O HAY QUE PEDIR POR PANTALLA LAS UBICACIONES???????
@@ -386,6 +390,12 @@ def main():
         
         for x in drone:
             f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
+            # TODO: Write a goal that the drone x is at the depot
+        
+        f.write("\n")
+
+
+        f.write("\t\t(ubicacion-transportador transportador1 deposito)\n")
             # TODO: Write a goal that the drone x is at the depot
         
         f.write("\n")
