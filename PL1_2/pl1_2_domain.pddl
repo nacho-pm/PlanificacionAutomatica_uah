@@ -1,5 +1,5 @@
 (define (domain pl1_2_domain)
-    (:requirements :strips :typing ) 
+    (:requirements :strips :typing :fluents ) 
     (:types
         dron transportador humano caja ubicacion contenido num - object
     )
@@ -29,12 +29,12 @@
     )
 
     (:functions
-        (total-cost)
-        (fly-cost ?origen ?destino - ubicacion)
+        (coste-total)
+        (coste-vuelo ?origen ?destino - ubicacion)
     )
 
 
-   (:action pick_box
+   (:action coger-caja
         :parameters (?u - ubicacion ?d - dron ?c - caja ?con - contenido)
         :precondition (and
             (ubicacion-dron ?d ?u)
@@ -157,6 +157,7 @@
         :effect (and
             (not(ubicacion-dron ?d ?origen))
             (ubicacion-dron ?d ?destino)
+            (increase (coste-total)(coste-vuelo ?origen ?destino))
         )
     )
 
