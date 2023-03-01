@@ -94,7 +94,7 @@
             (not(ubicacion-transportador ?t ?origen))
             (ubicacion-dron ?d ?destino)
             (ubicacion-transportador ?t ?destino)
-            (increase (coste-total) (coste-vuelo ?origen ?destino))
+            (increase (coste-total)(coste-vuelo ?origen ?destino))
         )
     )
 

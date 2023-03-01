@@ -16,7 +16,7 @@
     (=(coste-vuelo deposito campo) 5)
     (=(coste-vuelo campo deposito) 5)
     (=(coste-vuelo deposito fiesta) 10)
-    (=(coste-vuelo fiesta ) 10)
+    (=(coste-vuelo fiesta deposito) 10)
     (=(coste-vuelo deposito teatro) 15)
     (=(coste-vuelo teatro deposito) 15)
     
