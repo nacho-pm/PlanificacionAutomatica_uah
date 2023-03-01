@@ -14,6 +14,12 @@
 
 (:init
     (=(coste-vuelo deposito campo) 5)
+    (=(coste-vuelo campo deposito) 5)
+    (=(coste-vuelo deposito fiesta) 10)
+    (=(coste-vuelo fiesta ) 10)
+    (=(coste-vuelo deposito teatro) 15)
+    (=(coste-vuelo teatro deposito) 15)
+    
     (=(coste-total) 0)
     (siguiente n0 n1)
     (siguiente n1 n2)

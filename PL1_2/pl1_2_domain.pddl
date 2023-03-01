@@ -31,6 +31,7 @@
     (:functions
         (coste-total)
         (coste-vuelo ?origen ?destino - ubicacion)
+
     )
 
 
@@ -78,7 +79,7 @@
         :effect (and
             (not(dron-vacio ?d))
             (trasportador-en-dron ?t ?d)
-        )
+            )
     )
 
     (:action mover-transportador 
@@ -93,6 +94,7 @@
             (not(ubicacion-transportador ?t ?origen))
             (ubicacion-dron ?d ?destino)
             (ubicacion-transportador ?t ?destino)
+            (increase (coste-total) (coste-vuelo ?origen ?destino))
         )
     )
 
