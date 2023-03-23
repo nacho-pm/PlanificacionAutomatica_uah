@@ -81,22 +81,32 @@
             )
     )
 
-    (:action mover-transportador 
+    (:durative-action mover-transportador
         :parameters (?origen ?destino - ubicacion ?t - transportador  ?d - dron)
-        :precondition (and
-            (ubicacion-dron ?d ?origen)
-            (ubicacion-transportador ?t ?origen)
-            (trasportador-en-dron ?t ?d)
+        :duration (= ?duration (coste-vuelo ?origen ?destino))
+        :condition (and 
+            (at start (and 
+                (ubicacion-dron ?d ?origen)
+                (ubicacion-transportador ?t ?origen)
+                
+            ))
+            (over all (and 
+                (trasportador-en-dron ?t ?d)
+            ))
         )
-        :effect (and
-            (not(ubicacion-dron ?d ?origen))
-            (not(ubicacion-transportador ?t ?origen))
-            (ubicacion-dron ?d ?destino)
-            (ubicacion-transportador ?t ?destino)
-            (increase (coste-total)(coste-vuelo ?origen ?destino))
+        :effect (and 
+            (at start (and 
+                (not(ubicacion-dron ?d ?origen))
+                (not(ubicacion-transportador ?t ?origen))
+                
+            ))
+            (at end (and 
+                (ubicacion-dron ?d ?destino)
+                (ubicacion-transportador ?t ?destino)
+                (increase (coste-total)(coste-vuelo ?origen ?destino))
+            ))
         )
     )
-
 
     (:action soltar-transportador 
         :parameters (?u - ubicacion ?d - dron ?t - transportador)
