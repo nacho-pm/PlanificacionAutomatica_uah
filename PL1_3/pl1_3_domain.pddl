@@ -1,5 +1,5 @@
 (define (domain pl1_2_domain)
-    (:requirements :strips :typing :fluents ) 
+    (:requirements :strips :fluents :typing :durative-actions) 
     (:types
         dron transportador humano caja ubicacion contenido num - object
     )
@@ -31,7 +31,6 @@
     (:functions
         (coste-total)
         (coste-vuelo ?origen ?destino - ubicacion)
-
     )
 
 
@@ -150,17 +149,24 @@
             )
     )
 
-
-    (:action volar
-        :parameters (?d - dron ?origen - ubicacion ?destino - ubicacion)
-        :precondition (and
-            (ubicacion-dron ?d ?origen)
+    (:durative-action volar
+        :parameters (?d - dron ?origen ?destino - ubicacion)
+        :duration (= ?duration (coste-vuelo ?origen ?destino))
+        :condition (and 
+            (at start (and 
+                (ubicacion-dron ?d ?origen)
+            ))
         )
-        :effect (and
-            (not(ubicacion-dron ?d ?origen))
-            (ubicacion-dron ?d ?destino)
-            (increase (coste-total)(coste-vuelo ?origen ?destino))
+        :effect (and 
+            (at start (and 
+                (not (ubicacion-dron ?d ?origen))
+                
+            ))
+            (at end (and 
+                (ubicacion-dron ?d ?destino)
+                (increase (coste-total)(coste-vuelo ?origen ?destino))
+            ))
         )
     )
-
+        
 )
