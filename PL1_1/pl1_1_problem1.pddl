@@ -4,7 +4,7 @@
         humano1 - humano
         dron1 - dron
         brazo1 brazo2 - brazo
-        caja1 caja2 - caja
+        caja1 - caja
         comida - contenido
         deposito campo - ubicacion
 
@@ -24,7 +24,6 @@
         (ubicacion-humano humano1 campo)
 
         (contenido-caja comida caja1)
-        (contenido-caja comida caja2)
 
         (humano-necesita humano1 comida)
 
