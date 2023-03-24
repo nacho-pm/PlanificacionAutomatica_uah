@@ -226,6 +226,7 @@ def main():
     l1.append("parque")
     l1.append("estadio")
     l1.append("teatro")
+    l1aux = l1.copy()
 
 
     for x in range(options.ubicaciones-1):
@@ -321,10 +322,20 @@ def main():
         # Generate an initial state
 
         f.write("\t(:init\n")
-
+        location_aux = location.copy()
+        location_aux.append("deposito")
         # TODO: Initialize all facts here!
+        for i in range(len(location_aux)):
+            for j in range(i+1, len(location_aux)):
+                distancia = (j - i) * 5
+                f.write("\t\t(=(coste-vuelo {} {}) {})\n".format(location_aux[i], location_aux[j], distancia))
+                f.write("\t\t(=(coste-vuelo {} {}) {})\n".format(location_aux[j], location_aux[i], distancia))
 
-        
+
+        f.write("\n")
+        f.write("\t\t(=(coste-total) 0)\n")
+        f.write("\n")
+
         for n in range (len(huecos_transportador)-1):
             f.write("\t\t(siguiente " + huecos_transportador[n] +" "+ huecos_transportador[n+1]  +" )\n")
 
@@ -337,16 +348,18 @@ def main():
         f.write("\n")
         f.write("\t\t(ubicacion-transportador transportador1 deposito)\n")
         f.write("\n")
-        f.write("\t\t(llenado-actual transportador n0)\n")
+        f.write("\t\t(llenado-actual transportador1 n0)\n")
 
         #Inicializamos las personas heridas en sus ubicaciones 
         #¿¿¿¿¿¿¿¿¿LAS PERSONA SE INICIALIZAN ALEATORIAS O HAY QUE PEDIR POR PANTALLA LAS UBICACIONES???????
         for persona in person:
             ubi_persona = random.choice(location)
             f.write("\t\t(ubicacion-humano " + persona +" "+ ubi_persona +" )\n")
-
+        
         f.write("\n")
-
+        f.write("\t\t(dron-vacio dron1)\n")
+        
+        f.write("\n")
         # definir los contenidos de las cajas
         for x in range(len(caja)):
                 if caja[x] in cajas_with_contents[0]:
@@ -410,6 +423,9 @@ def main():
                     f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
 
         f.write("\t))\n")
+        
+        f.write("\n")
+        f.write("\t(:metric minimize (coste-total))\n")
 
         f.write(")\n")
 
