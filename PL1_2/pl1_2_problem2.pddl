@@ -1,4 +1,4 @@
-(define (problem pl1_2_problem) (:domain pl1_2_domain)
+(define (problem pl1_2_problem2) (:domain pl1_2_domain2)
 (:objects 
 
     n0 n1 n2 n3 n4 - num
@@ -13,7 +13,14 @@
 )
 
 (:init
-
+    (=(coste-vuelo deposito campo) 5)
+    (=(coste-vuelo campo deposito) 5)
+    (=(coste-vuelo deposito fiesta) 10)
+    (=(coste-vuelo fiesta deposito) 10)
+    (=(coste-vuelo deposito teatro) 15)
+    (=(coste-vuelo teatro deposito) 15)
+    
+    (=(coste-total) 0)
     (siguiente n0 n1)
     (siguiente n1 n2)
     (siguiente n2 n3)

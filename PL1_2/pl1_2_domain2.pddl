@@ -1,5 +1,5 @@
-(define (domain pl1_2_domain)
-    (:requirements :strips :typing) 
+(define (domain pl1_2_domain2)
+    (:requirements :strips :typing :fluents) 
     (:types
         dron transportador humano caja ubicacion contenido num - object
     )
@@ -25,6 +25,12 @@
         (humano-necesita ?h - humano ?con - contenido)
         
         (humano-satisfecho ?h - humano ?con - contenido)
+
+    )
+
+    (:functions
+        (coste-total)
+        (coste-vuelo ?origen ?destino - ubicacion)
 
     )
 
@@ -88,6 +94,7 @@
             (not(ubicacion-transportador ?t ?origen))
             (ubicacion-dron ?d ?destino)
             (ubicacion-transportador ?t ?destino)
+            (increase (coste-total)(coste-vuelo ?origen ?destino))
         )
     )
 
@@ -152,6 +159,7 @@
         :effect (and
             (not(ubicacion-dron ?d ?origen))
             (ubicacion-dron ?d ?destino)
+            (increase (coste-total)(coste-vuelo ?origen ?destino))
         )
     )
 
