@@ -1,0 +1,301 @@
+version: 2.1
+
+orbs:
+  go: circleci/go@1.7
+
+parameters:
+  go-version:
+    type: string
+    default: '1.17.6'
+
+executors:
+  node:
+    docker:
+      - image: node:16-slim
+  golang:
+    parameters:
+      variant:
+        description: "variant (ex. alpine)"
+        default: ""
+        type: string
+    docker:
+      # Resolves to golang:<go-version> or golang:<go-version>-<variant> (if variant supplied)
+      - image: golang:<< pipeline.parameters.go-version >><<# parameters.variant >>-<< parameters.variant >><</ parameters.variant >>
+  centos7:
+    docker:
+      - image: centos:7
+  almalinux8:
+    docker:
+      - image: almalinux:8
+  ubuntu1804:
+    docker:
+      - image: ubuntu:18.04
+  ubuntu2004:
+    docker:
+      - image: ubuntu:20.04
+  golangci-lint:
+    docker:
+      - image: golangci/golangci-lint:v1.43
+  ubuntu-machine:
+    machine:
+      image: ubuntu-2004:202107-02
+
+commands:
+  check-changes:
+    steps:
+      - run:
+          name: Check changes
+          command: |-
+            rc=0
+            scripts/should-e2e-run "${CIRCLE_PROJECT_USERNAME}" "${CIRCLE_PROJECT_REPONAME}" "${CIRCLE_BRANCH}" "${CIRCLE_PULL_REQUEST}" || rc=$?
+            case $rc in
+              0)
+                echo "Verifying critical changes"
+                ;;
+
+              1)
+                echo "No critical changes, skipping tests"
+                circleci step halt
+                ;;
+
+              *)
+                echo "E: scripts/should-e2e-run returned with exit code $rc. Abort."
+                exit $rc
+                ;;
+            esac
+  check-pkg-no-buildcfg:
+    steps:
+      - run:
+          name: Check pkg/... doesn't depend on buildcfg
+          command: |-
+            if go list -f '{{.Deps}}' ./pkg/... | grep -q buildcfg
+            then
+              echo "Prohibited buildcfg dependency found in pkg/:"
+              echo
+              go list -f '{{.ImportPath}} - {{.Deps}}' ./pkg/... | grep buildcfg
+              exit 1
+            fi
+  stop-background-apt:
+    steps:
+      - run:
+          name: Stop background apt updates
+          # https://discuss.circleci.com/t/could-not-get-lock-var-lib-apt-lists-lock/28337/4
+          command: sudo killall -9 apt-get || true
+  install-deps-apt:
+    parameters:
+      sudo:
+        type: boolean
+        default: true
+    steps:
+      - run:
+          name: Update package indexes
+          command: <<# parameters.sudo >>sudo <</ parameters.sudo >>apt-get -q update
+      - run:
+          name: Install dependencies
+          command: <<# parameters.sudo >>sudo <</ parameters.sudo >>apt-get -q install -y build-essential squashfs-tools libseccomp-dev libssl-dev uuid-dev cryptsetup-bin
+  configure-singularity:
+    steps:
+      - run:
+          name: Configure Singularity
+          command: ./mconfig -v -p /usr/local
+  build-singularity:
+    steps:
+      - configure-singularity
+      - run:
+          name: Build Singularity
+          command: make -C ./builddir all
+  install-singularity:
+    steps:
+      - build-singularity
+      - run:
+          name: Install Singularity
+          command: sudo make -C ./builddir install
+
+jobs:
+  lint-markdown:
+    executor: node
+    steps:
+      - run:
+          name: Install markdownlint
+          command: npm install -g markdownlint-cli
+      - checkout
+      - run:
+          name: Check for Lint
+          command: markdownlint .
+
+  check-go-mod:
+    executor: golang
+    steps:
+      - checkout
+      - run:
+          name: Go Mod Tidy
+          command: go mod tidy
+      - run:
+          name: Check Module Tidiness
+          command: git diff --exit-code -- go.mod go.sum
+
+  build-source-debian:
+    executor:
+      name: golang
+      variant: buster
+    steps:
+      - checkout
+      - install-deps-apt:
+          sudo: false
+      - build-singularity
+
+  build-source-alpine:
+    executor:
+      name: golang
+      variant: alpine
+    steps:
+      - checkout
+      - run:
+          name: Fetch deps
+          command: apk add -q --no-cache git alpine-sdk automake libtool linux-headers libarchive-dev util-linux-dev libuuid openssl-dev gawk sed cryptsetup
+      - build-singularity
+
+  lint-source:
+    executor: golangci-lint
+    steps:
+      - checkout
+      - install-deps-apt:
+          sudo: false
+      - configure-singularity
+      - run:
+          name: Check for Lint
+          command: make -C ./builddir check
+      - check-pkg-no-buildcfg
+
+  short-unit-tests:
+    executor: ubuntu-machine
+    steps:
+      - checkout
+      - go/install:
+          version: << pipeline.parameters.go-version >>
+      - stop-background-apt
+      - install-deps-apt
+      - install-singularity
+      - run:
+          name: Run unit tests
+          command: make -C ./builddir short-unit-test
+
+  integration-tests:
+    executor: ubuntu-machine
+    steps:
+      - checkout
+      - check-changes
+      - go/install:
+          version: << pipeline.parameters.go-version >>
+      - stop-background-apt
+      - install-deps-apt
+      - install-singularity
+      - run:
+          name: Run integration tests
+          no_output_timeout: 20m
+          command: make -C ./builddir integration-test
+
+  e2e-tests:
+    executor: ubuntu-machine
+    steps:
+      - checkout
+      - check-changes
+      - go/install:
+          version: << pipeline.parameters.go-version >>
+      - stop-background-apt
+      - install-deps-apt
+      - install-singularity
+      - run:
+          name: Run E2E tests
+          no_output_timeout: 35m
+          command: |-
+            export E2E_PARALLEL=8 && \
+            export E2E_DOCKER_USERNAME=$CIRCLE_CI_DOCKER_USERNAME && \
+            export E2E_DOCKER_PASSWORD=$CIRCLE_CI_DOCKER_PASSWORD && \
+            make -C ./builddir e2e-test
+      - store_artifacts:
+          path: builddir/e2e-cmd-report.txt
+
+  build-rpm:
+    parameters:
+      e:
+        type: executor
+    executor: << parameters.e >>
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |-
+            yum groupinstall -q -y 'Development Tools'
+            yum install -q -y cryptsetup libseccomp-devel squashfs-tools
+      - run:
+          name: Install Go
+          command: |-
+            curl -f -L -sS "https://dl.google.com/go/go<< pipeline.parameters.go-version >>.linux-amd64.tar.gz" | tar -z -x -C /usr/local/
+            echo "export PATH=$PATH:/usr/local/go/bin" >> $BASH_ENV
+      - configure-singularity
+      - run:
+          name: Build RPM
+          command: make -C builddir rpm
+      - run:
+          name: Install RPM
+          command: yum install -q -y $HOME/rpmbuild/RPMS/*/*.rpm
+      - run:
+          name: Run SingularityCE
+          command: singularity version
+      - store_artifacts:
+          path: ~/rpmbuild/RPMS
+
+  build-deb:
+    parameters:
+      e:
+        type: executor
+    executor: << parameters.e >>
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |-
+            apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential git libseccomp-dev pkg-config squashfs-tools cryptsetup dh-golang devscripts fakeroot
+      - run:
+          name: Install Go
+          command: |-
+            curl -f -L -sS "https://dl.google.com/go/go<< pipeline.parameters.go-version >>.linux-amd64.tar.gz" | tar -z -x -C /usr/local/
+            echo "export PATH=$PATH:/usr/local/go/bin" >> $BASH_ENV
+      - run:
+          name: Build DEB
+          command: |- 
+            dpkg-buildpackage -b -rfakeroot -us -uc
+            mkdir -p ~/deb
+            cp ../*.deb ~/deb/
+      - run:
+          name: Install DEB
+          command: apt install -y ~/deb/*.deb
+      - run:
+          name: Run SingularityCE
+          command: singularity version
+      - store_artifacts:
+          path: ~/deb
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - lint-markdown
+      - check-go-mod
+      - build-source-debian
+      - build-source-alpine
+      - lint-source
+      - short-unit-tests
+      - integration-tests
+      - e2e-tests
+      - build-rpm:
+          matrix:
+            parameters:
+              e: ["centos7", "almalinux8"]
+      - build-deb:
+          matrix:
+            parameters:
+              e: ["ubuntu1804", "ubuntu2004"]

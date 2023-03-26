@@ -1,0 +1,37 @@
+run:
+  timeout: 3m
+  build-tags:
+    - apparmor
+    - containers_image_openpgp
+    - e2e_test
+    - fakeroot_engine
+    - oci_engine
+    - seccomp
+    - selinux
+    - singularity_engine
+    - sylog
+
+linters:
+  disable-all: true
+  enable-all: false
+  enable:
+    - contextcheck
+    - deadcode
+    - dupl
+    - gofumpt
+    - goimports
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - revive
+    - staticcheck
+
+linters-settings:
+  misspell:
+    locale: US
+
+issues:
+  max-per-linter: 0
+  max-same-issues: 0
