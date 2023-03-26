@@ -3,13 +3,13 @@
 
     n0 n1 n2 n3 n4 - num
     humano1 humano2 humano3 humano4 humano5 - humano
-    dron1 - dron
+    dron1 dron2 - dron
     caja1 caja2 caja3 caja4 caja5 caja6 - caja
     comida - contenido
     bebida - contenido
     medicinas - contenido
     deposito campo fiesta teatro - ubicacion
-    transportador1 - transportador
+    transportador1 transportador2 - transportador
 )
 
 (:init
@@ -27,10 +27,13 @@
     (siguiente n3 n4)
 
     (ubicacion-dron dron1 deposito)
+    (ubicacion-dron dron2 deposito)
 
     (ubicacion-transportador transportador1 deposito)
+    (ubicacion-transportador transportador2 deposito)
 
     (llenado-actual transportador1 n0)
+    (llenado-actual transportador2 n0)
 
     (ubicacion-caja caja1 deposito)
     (ubicacion-caja caja2 deposito)
@@ -47,6 +50,7 @@
     (ubicacion-humano humano5 fiesta)
 
     (dron-vacio dron1)
+    (dron-vacio dron2)
 
     (contenido-caja caja1 comida)
     (contenido-caja caja2 bebida)
@@ -73,7 +77,9 @@
             (humano-satisfecho humano4 medicinas)
             (humano-satisfecho humano5 bebida)
             (ubicacion-dron dron1 deposito)
+            (ubicacion-dron dron2 deposito)
             (ubicacion-transportador transportador1 deposito)
+            (ubicacion-transportador transportador2 deposito)
         )
     )
 
