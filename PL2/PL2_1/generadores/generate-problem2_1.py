@@ -278,12 +278,11 @@ def main():
                    "_g" + str(options.goals) + "_ct" + str(len(content_types))
 
     # Open output file
-    with open(problem_name + ".pddl", 'w') as f:
+    with open(problem_name , 'w') as f:
         # Write the initial part of the problem
 
-        f.write("(define (problem " + problem_name + ")\n")
-        f.write("\t(:domain pl1_domain)\n")
-        f.write("\t(:objects\n")
+        f.write("(defproblem " + problem_name + " pl2_domain \n")
+        f.write("\t(\n")
 
         ######################################################################
         # Write objects
@@ -292,34 +291,31 @@ def main():
         # to suit your domain.
 
         for x in drone:
-            f.write("\t\t" + x + " - dron\n")
+            f.write("\t\t(" + x + "  dron)\n")
 
         for x in brazo:
-            f.write("\t\t" + x + " - brazo\n")
+            f.write("\t\t(" + x + "  brazo)\n")
 
         for x in location:
-            f.write("\t\t" + x + " - ubicacion\n")
+            f.write("\t\t(" + x + "  ubicacion)\n")
 
-        f.write("\t\tdeposito - ubicacion\n")
+        f.write("\t\t(deposito  ubicacion)\n")
 
         for x in caja:
-            f.write("\t\t" + x + " - caja\n")
+            f.write("\t\t(" + x + "  caja)\n")
 
         for x in content_types:
-            f.write("\t\t" + x + " - contenido\n")
+            f.write("\t\t(" + x + "  contenido)\n")
 
         for x in person:
-            f.write("\t\t" + x + " - humano\n")
+            f.write("\t\t(" + x + "  humano)\n")
 
         #for x in carrier:
             #f.write("\t" + x + " - carrier\n")
 
-        f.write("\t)\n")
 
         ######################################################################
         # Generate an initial state
-
-        f.write("\t(:init\n")
 
         # TODO: Initialize all facts here!
 
@@ -380,7 +376,7 @@ def main():
         ######################################################################
         # Write Goals
 
-        f.write("\t(:goal (and\n")
+        f.write("\t(\n")
 
         # All Drones should end up at the depot
         
@@ -399,7 +395,7 @@ def main():
                     # with this specific content
                     f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
 
-        f.write("\t))\n")
+        f.write("\t)\n")
 
         f.write(")\n")
 

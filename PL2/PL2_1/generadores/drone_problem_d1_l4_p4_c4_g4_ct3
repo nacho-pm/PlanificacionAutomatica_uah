@@ -1,0 +1,57 @@
+(defproblem drone_problem_d1_l4_p4_c4_g4_ct3 pl2_domain 
+	(
+		(dron1  dron)
+		(brazo1  brazo)
+		(brazo2  brazo)
+		(parque  ubicacion)
+		(hospital  ubicacion)
+		(mercado  ubicacion)
+		(deposito  ubicacion)
+		(caja1  caja)
+		(caja2  caja)
+		(caja3  caja)
+		(caja4  caja)
+		(comida  contenido)
+		(medicinas  contenido)
+		(bebida  contenido)
+		(persona1  humano)
+		(persona2  humano)
+		(persona3  humano)
+		(persona4  humano)
+		(brazo-dron dron1 brazo1)
+		(free-brazo dron1 brazo1)
+		(brazo-dron dron1 brazo2)
+		(free-brazo dron1 brazo2)
+
+		(ubicacion-dron dron1 deposito )
+
+		(ubicacion-humano persona1 mercado )
+		(ubicacion-humano persona2 hospital )
+		(ubicacion-humano persona3 mercado )
+		(ubicacion-humano persona4 parque )
+
+		(contenido-caja comida caja1)
+		(contenido-caja medicinas caja2)
+		(contenido-caja medicinas caja3)
+		(contenido-caja bebida caja4)
+
+		(ubicacion-caja caja1 deposito )
+		(ubicacion-caja caja2 deposito )
+		(ubicacion-caja caja3 deposito )
+		(ubicacion-caja caja4 deposito )
+
+
+		(humano-necesita persona1 comida)
+		(humano-necesita persona1 medicinas)
+		(humano-necesita persona2 bebida)
+		(humano-necesita persona4 medicinas)
+	)
+	(
+		(ubicacion-dron dron1 deposito)
+
+		(humano-satisfecho persona1 comida)
+		(humano-satisfecho persona1 medicinas)
+		(humano-satisfecho persona2 bebida)
+		(humano-satisfecho persona4 medicinas)
+	)
+)
