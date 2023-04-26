@@ -1,7 +1,7 @@
-(defdomain pl2domain(
+(defdomain pl2_domain(
 
-    (:operator (!coger_caja ?u ?d ?b ?c ?con)
-        (;prec
+    (:operator (!coger-caja ?u ?d ?b ?c ?con)
+        (
             (ubicacion ?u) (dron ?d) (brazo ?b) (caja ?c) (contenido ?con)
             (brazo-dron ?d ?b)
             (ubicacion-dron ?d ?u)
@@ -9,31 +9,31 @@
             (contenido-caja ?con ?c)
             (free-brazo ?d ?b)
         )
-        (;del
+        (
             (free-brazo ?d ?b)
             (ubicacion-caja ?c ?u)
         )
-        (;add
+        (
             (brazo-ocupado ?d ?b ?c ?con)
         )
     )
 
 
     (:operator (!volar ?d ?origen ?destino)
-        (;prec
+        (
             (dron ?d) (ubicacion ?origen) (ubicacion ?destino)
             (ubicacion-dron ?d ?origen)
         )
-        (;del
+        (
             (ubicacion-dron ?d ?origen)
         )
-        (;add
+        (
             (ubicacion-dron ?d ?destino)
         )
     )
 
-    (:operator (!entregar_caja ?u ?d ?b ?c ?con ?h)
-        (;prec
+    (:operator (!entregar-caja ?u ?d ?b ?c ?con ?h)
+        (
             (ubicacion ?u) (dron ?d) (brazo ?b) (caja ?c) (contenido ?con) (humano ?h)
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)
@@ -41,25 +41,27 @@
             (contenido-caja ?con ?c)
             (brazo-ocupado ?d ?b ?c ?con)
         )
-        (;del
+        (
             (brazo-ocupado ?d ?b ?c ?con)
             (humano-necesita ?h ?con)
         )
-        (;add
+        (
             (free-brazo ?d ?b)
             (ubicacion-caja ?c ?u)
         )
     )
     
-    (method (!enviar_todo ?d ?h ?c ?con)
-    (;prec enviar_todo
+    (:method (enviar-todo ?h ?con)
+    (
         (humano-necesita ?h ?con)
-        (ubicacion-humano ?h ?destino)
+
     )
-    (;subtarea enviar_todo
-        (coger_caja ?u ?d ?b ?c ?con)
-        (volar ?d ?origen ?destino)
-        (entregar_caja ?destino ?d ?b ?c ?con ?h)
+    (
+        (!coger-caja ?u ?d ?b ?c ?con)
+        (!volar ?d ?origen ?destino)
+        (!entregar-caja ?destino ?d ?b ?c ?con ?h)
+        (!volar ?d ?origen ?destino)
+        
     )
 
     )

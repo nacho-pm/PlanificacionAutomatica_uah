@@ -1,5 +1,19 @@
 (defproblem pl2_1_problem1 pl2_domain
     (
+    	(ubicacion deposito)
+    	(ubicacion campo)
+    	
+    	(humano humano1)
+    
+    	(caja caja1)
+    	
+    	(dron dron1)
+    	
+    	(brazo brazo1)
+    	(brazo brazo2)
+
+        (contenido comida)
+    	
         (ubicacion-dron dron1 deposito)
         (ubicacion-caja caja1 deposito)
 
@@ -15,8 +29,7 @@
 
         (humano-necesita humano1 comida)
     )
-    (    
-        (humano-satisfecho humano1 comida)
-        (ubicacion-dron dron1 deposito)
+    (
+    	(enviar-todo humano1 comida)
     )
 )
