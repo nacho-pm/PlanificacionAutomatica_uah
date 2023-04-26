@@ -15,7 +15,6 @@
 
         (humano-necesita humano1 comida)
     )
-
     (    
         (humano-satisfecho humano1 comida)
         (ubicacion-dron dron1 deposito)
