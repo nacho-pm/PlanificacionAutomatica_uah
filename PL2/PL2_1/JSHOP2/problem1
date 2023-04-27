@@ -1,4 +1,4 @@
-(defproblem pl2_1_problem1 pl2_domain
+(defproblem problem1 domain
     (
     	(ubicacion deposito)
     	(ubicacion campo)

@@ -1,8 +1,7 @@
-(defdomain pl2_domain(
+(defdomain domain(
 
     (:operator (!coger-caja ?u ?d ?b ?c ?con)
-        (
-            (ubicacion ?u) (dron ?d) (brazo ?b) (caja ?c) (contenido ?con)
+        (      
             (brazo-dron ?d ?b)
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
@@ -21,7 +20,6 @@
 
     (:operator (!volar ?d ?origen ?destino)
         (
-            (dron ?d) (ubicacion ?origen) (ubicacion ?destino)
             (ubicacion-dron ?d ?origen)
         )
         (
@@ -34,7 +32,6 @@
 
     (:operator (!entregar-caja ?u ?d ?b ?c ?con ?h)
         (
-            (ubicacion ?u) (dron ?d) (brazo ?b) (caja ?c) (contenido ?con) (humano ?h)
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)
             (ubicacion-humano ?h ?u)
@@ -60,7 +57,7 @@
         (!coger-caja ?u ?d ?b ?c ?con)
         (!volar ?d ?origen ?destino)
         (!entregar-caja ?destino ?d ?b ?c ?con ?h)
-        (!volar ?d ?origen ?destino)
+        (!volar ?d ?destino ?origen)
         
     )
 
@@ -68,4 +65,4 @@
     
 )
 
-);final defdomain
+)

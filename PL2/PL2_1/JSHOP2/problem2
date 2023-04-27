@@ -1,4 +1,4 @@
-(defproblem drone_problem_d1_l4_p4_c4_g4_ct3 pl2_domain 
+(defproblem problem2 domain 
 	(
 		(dron1  dron)
 		(brazo1  brazo)
@@ -47,8 +47,6 @@
 		(humano-necesita persona3 medicinas)
 	)
 	(
-		(ubicacion-dron dron1 deposito)
-
 		(enviar-todo persona1 medicinas)
 		(enviar-todo persona1 bebida)
 		(enviar-todo persona2 comida)
