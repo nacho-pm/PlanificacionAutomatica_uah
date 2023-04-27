@@ -3,9 +3,9 @@
 		(dron1  dron)
 		(brazo1  brazo)
 		(brazo2  brazo)
-		(parque  ubicacion)
-		(hospital  ubicacion)
-		(mercado  ubicacion)
+		(estadio  ubicacion)
+		(bolera  ubicacion)
+		(teatro  ubicacion)
 		(deposito  ubicacion)
 		(caja1  caja)
 		(caja2  caja)
@@ -25,10 +25,10 @@
 
 		(ubicacion-dron dron1 deposito )
 
-		(ubicacion-humano persona1 mercado )
-		(ubicacion-humano persona2 hospital )
-		(ubicacion-humano persona3 mercado )
-		(ubicacion-humano persona4 parque )
+		(ubicacion-humano persona1 bolera )
+		(ubicacion-humano persona2 bolera )
+		(ubicacion-humano persona3 estadio )
+		(ubicacion-humano persona4 estadio )
 
 		(contenido-caja comida caja1)
 		(contenido-caja medicinas caja2)
@@ -41,17 +41,17 @@
 		(ubicacion-caja caja4 deposito )
 
 
-		(humano-necesita persona1 comida)
 		(humano-necesita persona1 medicinas)
-		(humano-necesita persona2 bebida)
-		(humano-necesita persona4 medicinas)
+		(humano-necesita persona1 bebida)
+		(humano-necesita persona2 comida)
+		(humano-necesita persona3 medicinas)
 	)
 	(
 		(ubicacion-dron dron1 deposito)
 
-		(humano-satisfecho persona1 comida)
-		(humano-satisfecho persona1 medicinas)
-		(humano-satisfecho persona2 bebida)
-		(humano-satisfecho persona4 medicinas)
+		(enviar-todo persona1 medicinas)
+		(enviar-todo persona1 bebida)
+		(enviar-todo persona2 comida)
+		(enviar-todo persona3 medicinas)
 	)
 )

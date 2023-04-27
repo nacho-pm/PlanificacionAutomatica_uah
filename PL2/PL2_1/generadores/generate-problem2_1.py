@@ -273,9 +273,10 @@ def main():
     #               "_l" + str(options.ubicaciones) + "_p" + str(options.persons) + "_c" + str(options.cajas) + \
     #               "_g" + str(options.goals) + "_ct" + str(len(content_types))
 
-    problem_name = "drone_problem_d" + str(options.drones) + \
+    problem_name = "../drone_problem_d" + str(options.drones) + \
                    "_l" + str(options.ubicaciones) + "_p" + str(options.persons) + "_c" + str(options.cajas) + \
                    "_g" + str(options.goals) + "_ct" + str(len(content_types))
+
 
     # Open output file
     with open(problem_name , 'w') as f:
@@ -380,11 +381,11 @@ def main():
 
         # All Drones should end up at the depot
         
-        for x in drone:
-            f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
-            # TODO: Write a goal that the drone x is at the depot
+        # for x in drone:
+        #     f.write("\t\t(ubicacion-dron "+ x + " deposito)\n")
+        #     # TODO: Write a goal that the drone x is at the depot
         
-        f.write("\n")
+        # f.write("\n")
 
         for x in range(options.persons):
             for y in range(len(content_types)):
@@ -393,7 +394,7 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
-                    f.write("\t\t(humano-satisfecho "+ person_name +" "+ content_name + ")\n")
+                    f.write("\t\t(enviar-todo "+ person_name +" "+ content_name + ")\n")
 
         f.write("\t)\n")
 
