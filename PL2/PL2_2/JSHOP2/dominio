@@ -1,22 +1,50 @@
 (defdomain domain(
 
-    (:operator (!coger-caja ?u ?d ?b ?c ?con)
-        (      
+    (:operator (!coger-caja ?u ?d)
+        (;precondiciones 
+
             (brazo-dron ?d ?b)
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
             (contenido-caja ?con ?c)
             (free-brazo ?d ?b)
         )
-        (
+        (;delete
             (free-brazo ?d ?b)
             (ubicacion-caja ?c ?u)
         )
-        (
+        (;add
             (brazo-ocupado ?d ?b ?c ?con)
         )
     )
 
+
+    (:operator (!poner-caja-en-transportador ?u ?d ?t ?c)
+    
+        (
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (almacenamiento ?t ?c)
+        )
+        ()
+        (
+            (almacenamiento ?t (call - ?c 1))
+        )
+    )
+
+    (:operator (!coger-transportador ?u ?d ?t)
+        (      
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+        )
+        (
+            (free-dron ?d)
+            (ubicacion-transportador ?t ?u)
+        )
+        (
+            (brazo-ocupado ?d ?b ?t ?con)
+        )
+    )
 
 
     (:operator (!volar ?d ?origen ?destino)
@@ -31,7 +59,7 @@
         )
     )
 
-    (:operator (!entregar-caja ?u ?d ?b ?c ?con ?h)
+    (:operator (!entregar-caja ?u ?d ?b)
         (
             (humano-necesita ?h ?con)
             (ubicacion-dron ?d ?u)

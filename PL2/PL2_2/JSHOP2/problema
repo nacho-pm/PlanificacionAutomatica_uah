@@ -1,0 +1,30 @@
+(defproblem problema dominio
+    (
+    	(ubicacion deposito)
+    	(ubicacion ubi1)
+        (ubicacion ubi2)
+    	
+        (coste ubi1 ubi2 50)
+        (coste ubi2 ubi1 50)
+        (coste ubi1 deposito 50)
+        (coste deposito ubi1 50)
+        (coste ubi2 deposito 50)
+        (coste deposito ubi2 50)
+    	
+    	(dron d1)
+    	(transportador t1)
+    	
+        (free-dron d1)
+        (dron-con-transportador d1 t1)
+
+        (almacenamiento t1 0 10)
+
+        (ubicacion-dron d1 deposito)
+        (ubicacion-trasnportador t1 deposito)
+        
+        (tiene ubi1 0)
+    )
+    (
+    	(tiene ubi1 50)
+    )
+)
