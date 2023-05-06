@@ -282,7 +282,7 @@ def main():
     with open(problem_name , 'w') as f:
         # Write the initial part of the problem
 
-        f.write("(defproblem " + problem_name + " pl2_domain \n")
+        f.write("(defproblem problem pl2_1domain \n")
         f.write("\t(\n")
 
         ######################################################################
@@ -292,24 +292,24 @@ def main():
         # to suit your domain.
 
         for x in drone:
-            f.write("\t\t(" + x + "  dron)\n")
+            f.write("\t\t(" + x + "  dron)")
 
         for x in brazo:
-            f.write("\t\t(" + x + "  brazo)\n")
+            f.write("\t\t(" + x + "  brazo)")
 
         for x in location:
-            f.write("\t\t(" + x + "  ubicacion)\n")
+            f.write("\t\t(" + x + "  ubicacion)")
 
-        f.write("\t\t(deposito  ubicacion)\n")
+        f.write("\t\t(deposito  ubicacion)")
 
         for x in caja:
-            f.write("\t\t(" + x + "  caja)\n")
+            f.write("\t\t(" + x + "  caja)")
 
         for x in content_types:
-            f.write("\t\t(" + x + "  contenido)\n")
+            f.write("\t\t(" + x + "  contenido)")
 
         for x in person:
-            f.write("\t\t(" + x + "  humano)\n")
+            f.write("\t\t(" + x + "  humano)")
 
         #for x in carrier:
             #f.write("\t" + x + " - carrier\n")
@@ -321,14 +321,14 @@ def main():
         # TODO: Initialize all facts here!
 
         for x in brazo: 
-            f.write("\t\t(brazo-dron dron1 " + x + ")\n")
-            f.write("\t\t(free-brazo dron1 " + x + ")\n")
+            f.write("\t\t(brazo-dron dron1 " + x + ")")
+            f.write("\t\t(free-brazo dron1 " + x + ")")
 
         f.write("\n")
         
         # Todos los drones empiezan en el deposito
         for x in drone:
-            f.write("\t\t(ubicacion-dron " + x + " deposito )\n")
+            f.write("\t\t(ubicacion-dron " + x + " deposito )")
 
         f.write("\n")
 
@@ -336,7 +336,7 @@ def main():
         #¿¿¿¿¿¿¿¿¿LAS PERSONA SE INICIALIZAN ALEATORIAS O HAY QUE PEDIR POR PANTALLA LAS UBICACIONES???????
         for persona in person:
             ubi_persona = random.choice(location)
-            f.write("\t\t(ubicacion-humano " + persona +" "+ ubi_persona +" )\n")
+            f.write("\t\t(ubicacion-humano " + persona +" "+ ubi_persona +" )")
 
         f.write("\n")
 
@@ -344,19 +344,19 @@ def main():
         for x in range(len(caja)):
                 if caja[x] in cajas_with_contents[0]:
                     content_name = "comida"
-                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")")
                 elif caja[x] in cajas_with_contents[1]:
                     content_name = "medicinas"
-                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")                
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")")                
                 else :
                     content_name = "bebida"
-                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")\n")
+                    f.write("\t\t(contenido-caja " + content_name + " " +  caja[x] + ")")
 
         
         f.write("\n")        
         # Todos los drones empiezan en el deposito
         for x in caja:
-            f.write("\t\t(ubicacion-caja " + x + " deposito )\n")
+            f.write("\t\t(ubicacion-caja " + x + " deposito )")
 
         f.write("\n")
 
@@ -370,7 +370,7 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
-                    f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")\n")
+                    f.write("\t\t(humano-necesita "+ person_name +" "+ content_name + ")")
 
         f.write("\t)\n")
 
@@ -394,7 +394,7 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
-                    f.write("\t\t(enviar-todo "+ person_name +" "+ content_name + ")\n")
+                    f.write("\t\t(enviar-todo "+ person_name +" "+ content_name + ")")
 
         f.write("\t)\n")
 
