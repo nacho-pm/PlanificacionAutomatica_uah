@@ -18,7 +18,6 @@
     )
 
 
-
     (:operator (!volar ?d ?origen ?destino)
         (
             (ubicacion-dron ?d ?origen)
@@ -51,8 +50,9 @@
     
     (:method (enviar-todo ?h ?con)
     (
+    	(ubicacion-dron ?d ?origen)
         (humano-necesita ?h ?con)
-
+        (ubicacion-humano ?h ?destino)
     )
     (
         (!coger-caja ?u ?d ?b ?c ?con)
