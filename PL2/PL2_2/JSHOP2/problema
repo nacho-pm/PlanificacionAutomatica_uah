@@ -14,7 +14,7 @@
     	(dron d1)
     	(transportador t1)
     	
-        (free-dron d1)
+        (dron-libre d1)
         (dron-con-transportador d1 t1)
 
         (almacenamiento t1 0 10)
@@ -22,9 +22,9 @@
         (ubicacion-dron d1 deposito)
         (ubicacion-trasnportador t1 deposito)
         
-        (tiene ubi1 0)
+        (ubicacion-necesita ubi1 50)
     )
     (
-    	(tiene ubi1 50)
+    	(enviar-todo ubi1 50)
     )
 )

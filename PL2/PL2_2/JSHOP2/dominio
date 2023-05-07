@@ -28,7 +28,20 @@
         )
         ()
         (
-            (almacenamiento ?t (call - ?c 1))
+            (almacenamiento ?t (call + ?c 1) 10)
+        )
+    )
+
+    (:operator (!coger-caja-del-transportador ?u ?d ?t ?c)
+    
+        (
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (almacenamiento ?t ?c)
+        )
+        ()
+        (
+            (almacenamiento ?t (call + ?c 1) 10)
         )
     )
 
@@ -36,62 +49,71 @@
         (      
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
+            (dron-libre ?d)
         )
         (
-            (free-dron ?d)
+            (dron-libre ?d)
             (ubicacion-transportador ?t ?u)
         )
         (
-            (brazo-ocupado ?d ?b ?t ?con)
+            (dron-con-transportador ?d ?t)
+        )
+    )
+
+    (:operator (!soltar-transportador ?u ?d ?t)
+        (      
+            (ubicacion-dron ?d ?u)
+            (dron-con-transportador ?d ?t)
+        )
+        (
+            (dron-con-transportador ?d ?t)
+        )
+        (
+            (ubicacion-transportador ?t ?u)
         )
     )
 
 
     (:operator (!volar ?d ?origen ?destino)
-        (
+        (;precondiciones
             (ubicacion-dron ?d ?origen)
         )
-        (
+        (;delete
             (ubicacion-dron ?d ?origen)
         )
-        (
+        (;add
             (ubicacion-dron ?d ?destino)
         )
     )
 
-    (:operator (!entregar-caja ?u ?d ?b)
+    (:operator (!entregar-caja ?u ?d ?c)
         (
-            (humano-necesita ?h ?con)
+
             (ubicacion-dron ?d ?u)
-            (ubicacion-humano ?h ?u)
-            (contenido-caja ?con ?c)
-            (brazo-ocupado ?d ?b ?c ?con)
+            (dron-con-caja ?d ?c)
         )
         (
-            (brazo-ocupado ?d ?b ?c ?con)
-            (humano-necesita ?h ?con)
+            (dron-con-caja ?d ?c)
         )
         (
-            (free-brazo ?d ?b)
-            (ubicacion-caja ?c ?u)
+            (necesita ?c ?u)
         )
     )
     
-    (:method (enviar-todo ?h ?con)
+
+    (:method (enviar-todo ?u ?c)
     (
-        (humano-necesita ?h ?con)
+        (ubicacion-necesita ?u ?c)
 
     )
+    ()
     (
-        (!coger-caja ?u ?d ?b ?c ?con)
+        (!coger-caja ?u ?d ?c)
         (!volar ?d ?origen ?destino)
-        (!entregar-caja ?destino ?d ?b ?c ?con ?h)
-        (!volar ?d ?destino ?origen)
-        
+        (!entregar-caja ?destino ?d ?c)
+        (!volar ?d ?destino ?origen) 
     )
-
     )
     
-)
-
+    )
 )
