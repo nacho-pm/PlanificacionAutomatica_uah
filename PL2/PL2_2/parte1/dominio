@@ -1,104 +1,112 @@
 (defdomain dominio(
 
-    (:operator (!coger-caja ?u ?d)
-        (;precondiciones 
+    (:operator (!coger-contenido ?u ?d ?con)
+        ( 
          
             (DRON ?d)
             (UBICACION ?u)
+            (CONTENIDO ?con)
             (ubicacion-dron ?d ?u)
             (dron-libre ?d)
-            (ubicacion-numero-cajas ?u ?c) ;c es numero de cajas
-            (call > ?c 0)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
+            (call > ?cu 0)
         )
-        (;delete
+        (
             (dron-libre ?d)
-            (ubicacion-numero-cajas ?u ?c)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
         )
-        (;add
-            (dron-con-caja ?d)
-            (ubicacion-numero-cajas ?u (call - ?c 1))
+        (
+            (dron-con-contenido ?d ?con)
+            (ubicacion-numero-contenidos ?u (call - ?cu 1) ?con)
         )
     )
 
-    (:operator (!dejar-caja ?u ?d)
+    (:operator (!dejar-contenido ?u ?d ?con)
         (
             (DRON ?d)
             (UBICACION ?u)
+            (CONTENIDO ?con)
             (ubicacion-dron ?d ?u)
-            (dron-con-caja ?d)
-            (ubicacion-numero-cajas ?u ?c)
+            (dron-con-contenido ?d ?con)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
         )
         (
-            (dron-con-caja ?d)
-            (ubicacion-numero-cajas ?u ?c)
+            (dron-con-contenido ?d ?con)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
         )
         (
             (dron-libre ?d)
-            (ubicacion-numero-cajas ?u (call + ?c 1))
+            (ubicacion-numero-contenidos ?u (call + ?cu 1) ?con)
         )
     )
     
-    (:operator (!dejar-caja-en-ubicacion ?u ?d)
+    (:operator (!dejar-contenido-en-ubicacion ?u ?d ?con)
         (
             (DRON ?d)
             (UBICACION ?u)
+            (CONTENIDO ?con)
             (ubicacion-dron ?d ?u)
-            (dron-con-caja ?d)
-            (ubicacion-numero-cajas ?u ?c)
-            (ubicacion-necesita ?u ?c)
+            (dron-con-contenido ?d ?con)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
+            (ubicacion-necesita ?u ?cant ?con)
+            (call > ?cant 0)
         )
         (
-            (dron-con-caja ?d)
-            (ubicacion-numero-cajas ?u ?c)
-            (ubicacion-necesita ?u ?c)
+            (dron-con-contenido ?d ?con)
+            (ubicacion-numero-contenidos ?u ?cu ?con)
+            (ubicacion-necesita ?u ?cant ?con)
         )
         (
             (dron-libre ?d)
-            (ubicacion-numero-cajas ?u (call + ?c 1))
-            (ubicacion-necesita ?u (call - ?c 1))
+            (ubicacion-numero-contenidos ?u (call + ?cu 1) ?con)
+            (ubicacion-necesita ?u (call - ?cant 1) ?con)
         )
     )
 
 
-    (:operator (!poner-caja-en-transportador ?u ?d ?t ?c)
-    
-        (
-            (DRON ?d)
-            (UBICACION ?u)
-            (TRANSPORTADOR ?t)
-            (ubicacion-dron ?d ?u)
-            (ubicacion-transportador ?t ?u)
-            (dron-con-caja ?d)
-            (almacenamiento ?t ?tam ?tamax) 
-        )
-        (
-            (dron-con-caja ?d)
-            (almacenamiento ?t ?tam ?tamax)
-        )
-        (
-            (almacenamiento ?t (call + ?tam ?c) ?tamax)
-            (dron-libre ?d)
-        )
-    )
-
-    (:operator (!coger-caja-del-transportador ?u ?d ?t ?c)
+    (:operator (!poner-contenido-en-transportador ?u ?d ?t ?con)
     
         (
             (DRON ?d)
             (UBICACION ?u)
             (TRANSPORTADOR ?t)
+            (CONTENIDO ?con)
+            (ubicacion-dron ?d ?u)
+            (ubicacion-transportador ?t ?u)
+            (dron-con-contenido ?d ?con)
+            (almacenamiento ?t ?tam ?tamax) 
+            (call < ?tam ?tamax)
+        )
+        (
+            (dron-con-contenido ?d ?con)
+            (almacenamiento ?t ?tam ?tamax)
+        )
+        (
+            (almacenamiento ?t (call + ?tam 1) ?tamax)
+            (dron-libre ?d)
+        )
+    )
+
+    (:operator (!coger-contenido-del-transportador ?u ?d ?t ?con)
+    
+        (
+            (DRON ?d)
+            (UBICACION ?u)
+            (TRANSPORTADOR ?t)
+            (CONTENIDO ?con)
             (ubicacion-dron ?d ?u)
             (ubicacion-transportador ?t ?u)
             (dron-libre ?d)
             (almacenamiento ?t ?tam ?tamax) 
+            (call > ?tam 0)
         )
         (
             (dron-libre ?d)
             (almacenamiento ?t ?tam ?tamax)
         )
         (
-            (almacenamiento ?t (call - ?tam ?c) ?tamax)
-            (dron-con-caja ?d)
+            (almacenamiento ?t (call - ?tam 1) ?tamax)
+            (dron-con-contenido ?d ?con)
         )
     )
 
@@ -117,6 +125,8 @@
         )
         (
             (dron-con-transportador ?d ?t)
+            (ubicacion-transportador ?t ?d)
+
         )
     )
     
@@ -127,8 +137,11 @@
             (TRANSPORTADOR ?t)  
             (ubicacion-dron ?d ?u)
             (dron-con-transportador ?d ?t)
+            (ubicacion-transportador ?t ?d)
         )
         (
+            (ubicacion-transportador ?t ?d)
+            (ubicacion-transportador ?t ?d)
             (dron-con-transportador ?d ?t)
         )
         (
@@ -137,7 +150,7 @@
         )
     )
 
-    (:operator (!volar-sin-transportador ?d ?origen ?edstino)
+    (:operator (!volar-sin-transportador ?d ?origen ?destino)
     
         (
             (DRON ?d)
@@ -154,7 +167,7 @@
         50 ;coste del vuelo sin transportador
     )
 
-    (:operator (!volar-con-transportador ?d ?origen ?edstino)
+    (:operator (!volar-con-transportador ?d ?origen ?destino)
     
         (
             (DRON ?d)
@@ -175,71 +188,101 @@
     )
 
 
-    (:method (llenar-transportador ?u ?d ?t ?c)
+    (:method (llenar-transportador ?u ?d ?t ?con ?cant)
     
     (
-        (DRON ?d)
         (UBICACION ?u)
+        (DRON ?d)
         (TRANSPORTADOR ?t)
+        (CONTENIDO ?con)
+        (ubicacion-dron ?d ?u)
+        (ubicacion-transportador ?t ?u)
+        (dron-libre ?d)
+        (almacenamiento ?t ?tam ?tamax)
+        (call < ?tam ?tamax)
+        (call > ?cant 0)
+    )
+    (
+        (!coger-contenido ?u ?d ?con)
+        (!poner-contenido-en-transportador ?u ?d ?t ?con)
+        (llenar-transportador ?u ?d ?t ?con (call - ?cant 1))
+    )
+
+    (
+        (UBICACION ?u)
+        (DRON ?d)
+        (TRANSPORTADOR ?t)
+        (CONTENIDO ?con)
         (ubicacion-dron ?d ?u)
         (ubicacion-transportador ?t ?u)
         (dron-libre ?d)
         (almacenamiento ?t ?tam ?tamax)
     )
     (
-        (!coger-caja ?u ?d)
-        (!poner-caja-en-transportador ?u ?d ?t ?c)
-        (llenar-transportador ?u ?d ?t (call - ?c 1))
     )
+    
+    )
+
+    (:method (vaciar-transportador ?u ?d ?t ?con)
 
     (
         (DRON ?d)
         (UBICACION ?u)
         (TRANSPORTADOR ?t)
+        (CONTENIDO ?con)
         (ubicacion-dron ?d ?u)
         (ubicacion-transportador ?t ?u)
         (dron-libre ?d)
         (almacenamiento ?t ?tam ?tamax)
+        (ubicacion-necesita ?u ?cant ?con)
+        (call > ?tam 0)
+    )
+    (
+        (!coger-contenido-del-transportador ?u ?d ?t ?con)
+        (!dejar-contenido-en-ubicacion ?u ?d ?con)
+        (vaciar-transportador ?u ?d ?t ?con)
+    )
+    (
+        (DRON ?d)
+        (UBICACION ?u)
+        (TRANSPORTADOR ?t)
+        (CONTENIDO ?con)
+        (ubicacion-dron ?d ?u)
+        (ubicacion-transportador ?t ?u)
+        (dron-libre ?d)
+        (almacenamiento ?t ?tam ?tamax)
+        (ubicacion-necesita ?u ?c ?con)
     )
     ()
-    
-    )
-
-    (:method (vaciar-transportador ?u ?d ?t)
-
-    (
-        (DRON ?d)
-        (UBICACION ?u)
-        (TRANSPORTADOR ?t)
-        (ubicacion-dron ?d ?u)
-        (ubicacion-transportador ?t ?u)
-        (dron-libre ?d)
-        (almacenamiento ?t ?tam ?tamax)
-        (ubicacion-necesita ?u ?c)
-    )
-    (
-        (!coger-caja-del-transportador ?u ?d ?t ?c)
-        (!entregar-caja ?u ?d)
-        (vaciar-transportador ?u ?d ?t)
-    )
     )
 
 
 
 
     (:method (volar ?d ?origen ?destino)
-        (;vuelo sin transportador
+        ;vuelosintransportador
+        (
             (DRON ?d)
             (UBICACION ?origen)
             (UBICACION ?destino)
             (ubicacion-dron ?d ?origen)
-            (or ((dron-libre ?d) (dron-con-caja ?d ?c))) ;el dron podra volar libre o con una caja
+            (dron-con-contenido ?d ?con) ;el dron podra volar libre o con una contenido
         )
         (
             (!volar-sin-transportador ?d ?origen ?destino)
         )
-
-        (;vuelo con transportador
+        (
+            (DRON ?d)
+            (UBICACION ?origen)
+            (UBICACION ?destino)
+            (ubicacion-dron ?d ?origen)
+            (dron-libre ?d) ;el dron podra volar libre o con una contenido
+        )
+        (
+            (!volar-sin-transportador ?d ?origen ?destino)
+        )
+        ;vuelocontransportador
+        (
             (DRON ?d)
             (UBICACION ?origen)
             (UBICACION ?destino)
@@ -256,40 +299,43 @@
 
     
 
-    (:method (metodo-sin-transportador ?d ?destino)
+    (:method (metodo-sin-transportador ?d ?destino ?con)
     
     (
         (DRON ?d)
         (UBICACION ?destino)
-        (ubicacion-necesita ?destino ?c)
+        (CONTENIDO ?con)
+        (ubicacion-necesita ?destino ?cant ?con)
         (ubicacion-dron ?d ?origen)
         (dron-libre ?d)
     )
     (
 
-        (!coger-caja ?origen ?d)
-        (volar ?d ?u ?destino)
-        (!entregar-caja ?destino ?d)
+        (!coger-contenido ?origen ?d ?con)
+        (volar ?d ?origen ?destino)
+        (!dejar-contenido-en-ubicacion ?destino ?d ?con)
     )
     )
     
-    (:method (metodo-con-transportador ?d ?destino)
+    (:method (metodo-con-transportador ?d ?destino ?con)
     
     (
         (DRON ?d)
         (UBICACION ?destino)
         (TRANSPORTADOR ?t)
-        (ubicacion-necesita ?destino ?c)
+        (CONTENIDO ?con)
+        (ubicacion-necesita ?destino ?cant ?con)
         (ubicacion-dron ?d ?origen)
         (dron-libre ?d)
         (almacenamiento ?t ?tam ?tamax)
     )
+    
     (
-        (llenar-transportador ?origen ?d ?t ?c)
+        (llenar-transportador ?origen ?d ?t ?con ?cant)
         (!coger-transportador ?origen ?d ?t)
-        (volar ?d ?u ?destino)
+        (volar ?d ?origen ?destino)
         (!soltar-transportador ?destino ?d ?t)
-        (vaciar-transportador ?destino ?d ?t)
+        (vaciar-transportador ?destino ?d ?t ?con)
         (!coger-transportador ?destino ?d ?t)
     )
     )
@@ -300,12 +346,13 @@
     (
         (DRON ?d) 
         (UBICACION ?u)
-        (ubicacion-necesita ?u ?c)
-        (call = ?c 1) ;cuando el numero de cajs que ubicacion-necesita es 1
+        (ubicacion-dron ?d ?origen)
+        (ubicacion-necesita ?u ?cant ?con)
+        (call = ?cant 1) ;cuando el numero de cajs que ubicacion-necesita es 1
     )
     (
-        (metodo-sin-transportador ?d ?u)
-        (volar ?d ?u ?deposito) ;vuelta al deposito
+        (metodo-sin-transportador ?d ?u ?con)
+        (volar ?d ?u ?origen) ;vuelta al deposito
         (enviar-todo)
     )
 
@@ -314,15 +361,25 @@
         (DRON ?d)
         (UBICACION ?u)
         (TRANSPORTADOR ?t)
-        (ubicacion-necesita ?u ?c)
-        (call > ?c 1) ;cuando el numero de cajs que ubicacion-necesita es mayor que 1
+        (CONTENIDO ?con)
+        (ubicacion-necesita ?u ?cant ?con)
+        (call > ?cant 1) ;cuando el numero de cajs que ubicacion-necesita es mayor que 1
         (almacenamiento ?t ?tam ?tamax)
     )
     (
-        (metodo-con-transportador ?d ?u)
+        (metodo-con-transportador ?d ?u ?con)
         (volar ?d ?u ?deposito) ;vuelta al deposito
         (!soltar-transportador ?deposito ?d ?t)
         (enviar-todo)
+    )
+
+    (
+        (DRON ?d)
+        (UBICACION ?u)
+        (TRANSPORTADOR ?t)
+        (CONTENIDO ?con)
+    )
+    (
     )
     )
 )
