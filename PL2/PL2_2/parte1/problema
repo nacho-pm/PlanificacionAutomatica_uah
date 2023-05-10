@@ -1,0 +1,23 @@
+(defproblem problema dominio
+    (
+    	(UBICACION deposito)
+    	(UBICACION ubi1)
+    	
+    	
+    	(DRON d1)
+    	(TRANSPORTADOR t1)
+    	
+        (dron-libre d1)
+
+        (almacenamiento t1 0 10)
+
+        (ubicacion-dron d1 deposito)
+        (ubicacion-trasnportador t1 deposito)
+        
+        (ubicacion-numero-cajas deposito 15)
+        (ubicacion-necesita ubi1 15)
+    )
+    (
+    	(enviar-todo)
+    )
+)

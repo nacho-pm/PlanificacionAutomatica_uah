@@ -2,6 +2,11 @@
 
     (:operator (!coger-caja ?u ?d ?b ?c ?con)
         (      
+            (DRON ?d)
+            (BRAZO ?b)
+            (CAJA ?c)
+            (CONTENIDO ?con)
+            
             (brazo-dron ?d ?b)
             (ubicacion-dron ?d ?u)
             (ubicacion-caja ?c ?u)
