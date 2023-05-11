@@ -1,4 +1,4 @@
-(defproblem problem5 dominio
+(defproblem problem dominio
     (
     	(UBICACION deposito)
     	(UBICACION ubi1)
@@ -14,9 +14,9 @@
     	
         (dron-libre d1)
 
-        (almacenamiento t1 0 20)
-        (almacenamiento t2 0 50)
-        (almacenamiento t3 0 100)
+        (almacenamiento t1 0 50)
+        (almacenamiento t2 0 100)
+        (almacenamiento t3 0 20)
 
         (ubicacion-dron d1 deposito)
         (ubicacion-transportador t1 deposito)
@@ -29,8 +29,8 @@
         (ubicacion-numero-contenidos ubi1 0 medicina)
         (ubicacion-numero-contenidos ubi1 0 comida)
 
-        (ubicacion-necesita ubi1 20 medicina)
-        (ubicacion-necesita ubi1 30 comida)
+        (ubicacion-necesita ubi1 50 medicina)
+        (ubicacion-necesita ubi1 0 comida)
         (necesidad-de-recursos ubi1 50)
     )
     (
