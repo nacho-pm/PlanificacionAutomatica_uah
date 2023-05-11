@@ -25,10 +25,13 @@
         
         (ubicacion-numero-contenidos deposito 50 medicina)
         (ubicacion-numero-contenidos deposito 50 comida)
+
         (ubicacion-numero-contenidos ubi1 0 medicina)
         (ubicacion-numero-contenidos ubi1 0 comida)
+
         (ubicacion-necesita ubi1 9 medicina)
         (ubicacion-necesita ubi1 41 comida)
+        (necesidad-de-recursos ubi1 50)
     )
     (
     	(enviar-todo)

@@ -4,6 +4,7 @@
     	(UBICACION ubi1)
 
         (CONTENIDO medicina)
+        (CONTENIDO comida)
     	
     	
     	(DRON d1)
@@ -23,8 +24,11 @@
         (ubicacion-transportador t3 deposito)
         
         (ubicacion-numero-contenidos deposito 50 medicina)
+        (ubicacion-numero-contenidos deposito 50 comida)
         (ubicacion-numero-contenidos ubi1 0 medicina)
-        (ubicacion-necesita ubi1 50 medicina)
+        (ubicacion-numero-contenidos ubi1 0 comida)
+        (ubicacion-necesita ubi1 20 medicina)
+        (ubicacion-necesita ubi1 30 comida)
     )
     (
     	(enviar-todo)

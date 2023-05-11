@@ -302,12 +302,14 @@
     (:method (metodo-sin-transportador ?d ?destino ?con)
     
     (
+        :sort-by ?cant > (
         (DRON ?d)
         (UBICACION ?destino)
         (CONTENIDO ?con)
         (ubicacion-necesita ?destino ?cant ?con)
         (ubicacion-dron ?d ?origen)
         (dron-libre ?d)
+        )
     )
     (
 
@@ -320,6 +322,7 @@
     (:method (metodo-con-transportador ?d ?destino ?con)
     
     (
+        :sort-by ?cant > (
         (DRON ?d)
         (UBICACION ?destino)
         (TRANSPORTADOR ?t)
@@ -328,6 +331,7 @@
         (ubicacion-dron ?d ?origen)
         (dron-libre ?d)
         (almacenamiento ?t ?tam ?tamax)
+        )
     )
     
     (
@@ -344,12 +348,15 @@
     (:method (enviar-todo)
     ;sin transportador
     (
+        :sort-by ?r > (
         (DRON ?d) 
         (UBICACION ?destino)
         (CONTENIDO ?con)
         (ubicacion-dron ?d ?origen)
         (ubicacion-necesita ?destino ?cant ?con)
         (call = ?cant 1) ;cuando el numero de cajs que ubicacion-necesita es 1
+        (necesidad-de-recursos ?destino ?r)
+        )
     )
     (
         (metodo-sin-transportador ?d ?destino ?con)
@@ -359,6 +366,7 @@
 
     ;con transportador
     (
+        :sort-by ?r > (
         (DRON ?d)
         (UBICACION ?destino)
         (TRANSPORTADOR ?t)
@@ -367,6 +375,8 @@
         (ubicacion-necesita ?destino ?cant ?con)
         (call > ?cant 1) ;cuando el numero de cajs que ubicacion-necesita es mayor que 1
         (almacenamiento ?t ?tam ?tamax)
+        (necesidad-de-recursos ?destino ?r)
+        )
     )
     (
         (metodo-con-transportador ?d ?destino ?con)
@@ -374,15 +384,13 @@
         (!soltar-transportador ?origen ?d ?t)
         (enviar-todo)
     )
-
     (
         (DRON ?d)
         (UBICACION ?u)
         (TRANSPORTADOR ?t)
         (CONTENIDO ?con)
     )
-    (
-    )
+    ()
     )
 )
 )

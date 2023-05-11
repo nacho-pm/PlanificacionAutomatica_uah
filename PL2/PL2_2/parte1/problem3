@@ -9,26 +9,23 @@
     	
     	(DRON d1)
     	(TRANSPORTADOR t1)
-    	(TRANSPORTADOR t2)
-    	(TRANSPORTADOR t3)
+
     	
         (dron-libre d1)
 
-        (almacenamiento t1 0 10)
-        (almacenamiento t2 0 20)
-        (almacenamiento t3 0 30)
+        (almacenamiento t1 0 40)
+
 
         (ubicacion-dron d1 deposito)
         (ubicacion-transportador t1 deposito)
-        (ubicacion-transportador t2 deposito)
-        (ubicacion-transportador t3 deposito)
+
         
-        (ubicacion-numero-contenidos deposito 50 medicina)
-        (ubicacion-numero-contenidos deposito 50 comida)
+        (ubicacion-numero-contenidos deposito 100 medicina)
+        (ubicacion-numero-contenidos deposito 100 comida)
         (ubicacion-numero-contenidos ubi1 0 medicina)
         (ubicacion-numero-contenidos ubi1 0 comida)
-        (ubicacion-necesita ubi1 9 medicina)
-        (ubicacion-necesita ubi1 41 comida)
+        (ubicacion-necesita ubi1 20 medicina)
+        (ubicacion-necesita ubi1 30 comida)
     )
     (
     	(enviar-todo)
